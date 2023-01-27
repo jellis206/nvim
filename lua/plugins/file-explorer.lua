@@ -33,13 +33,24 @@ return {
       end
     end,
     opts = {
+      nesting_rules = {
+          ["ts"] = { "html", "sass", "scss", "spec.ts" },
+      },
       filesystem = {
+        -- renderers = {
+        --   directory = {
+              -- custom icon stuff
+        --   },
+        -- },
         bind_to_cwd = false,
         follow_current_file = true,
         filtered_items = {
           visible = true,
           hide_dotfiles = false,
-          hide_gitignored = true,
+          always_show = { -- remains visible even if other settings would normally hide it
+            ".gitignored",
+            "node_modules",
+          },
         },
       },
     },
