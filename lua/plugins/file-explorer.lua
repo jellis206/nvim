@@ -33,9 +33,6 @@ return {
       end
     end,
     opts = {
-      nesting_rules = {
-          ["ts"] = { "html", "sass", "scss", "spec.ts" },
-      },
       filesystem = {
         -- renderers = {
         --   directory = {
