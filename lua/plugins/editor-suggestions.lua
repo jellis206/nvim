@@ -27,11 +27,6 @@ return {
   },
 
   -- auto completion
-  {
-    "tzachar/cmp-tabnine",
-    dependencies = { "nvim-cmp" },
-    build = "./install.ps1",
-  },
 
   {
     "hrsh7th/nvim-cmp",
@@ -84,5 +79,11 @@ return {
         },
       }
     end,
+  },
+
+  {
+    "tzachar/cmp-tabnine",
+    build = "./install.sh",
+    dependencies = "hrsh7th/nvim-cmp",
   },
 }
