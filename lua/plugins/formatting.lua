@@ -15,6 +15,7 @@ return {
       local formatting = null_ls.builtins.formatting -- to setup formatters
       local diagnostics = null_ls.builtins.diagnostics -- to setup linters
       local code_actions = null_ls.builtins.code_actions -- to setup linters
+      local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
       null_ls.setup({
         sources = {
           formatting.stylua,
@@ -27,7 +28,7 @@ return {
           formatting.ruff,
 
           formatting.astyle.with({
-            args = { "--style=google", "--quiet", "--indent=spaces=2"}
+            args = { "--style=google", "--quiet", "--indent=spaces=2" },
           }),
 
           -- diagnostics.semgrep,
@@ -42,7 +43,7 @@ return {
           }),
 
           code_actions.refactoring.with({
-            filetypes = {}
+            filetypes = {},
           }),
         },
         -- configure format on save
@@ -70,13 +71,13 @@ return {
 
   {
     "jay-babu/mason-null-ls.nvim",
-    dependencies = {"mason.nvim", "null-ls.nvim" },
-    config = function ()
-     require("mason-null-ls").setup({
-      ensure_installed = nil,
-      automatic_installation = true,
-      automatic_setup = false,
-    })
+    dependencies = { "mason.nvim", "null-ls.nvim" },
+    config = function()
+      require("mason-null-ls").setup({
+        ensure_installed = nil,
+        automatic_installation = true,
+        automatic_setup = false,
+      })
     end,
   },
 }
