@@ -5,18 +5,17 @@ return {
     keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
     config = true,
   },
-
   {
     "jose-elias-alvarez/null-ls.nvim",
     event = "BufReadPre",
     dependencies = { "mason.nvim" },
-    config = function()
+    opts = function(_, opts)
       local null_ls = require("null-ls")
       local formatting = null_ls.builtins.formatting -- to setup formatters
       local diagnostics = null_ls.builtins.diagnostics -- to setup linters
       local code_actions = null_ls.builtins.code_actions -- to setup linters
       local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-      null_ls.setup({
+      vim.list_extend(opts.sources, {
         sources = {
           formatting.stylua,
           formatting.standardrb,
@@ -54,13 +53,15 @@ return {
               group = augroup,
               buffer = bufnr,
               callback = function()
-                vim.lsp.buf.format({
-                  filter = function(client)
-                    --  only use null-ls for formatting instead of lsp server
-                    return client.name == "null-ls"
-                  end,
-                  bufnr = bufnr,
-                })
+                vim.lsp.buf.format(
+                  -- {
+                  -- filter = function(client)
+                  --   --  only use null-ls for formatting instead of lsp server
+                  --   return client.name == "null-ls"
+                  -- end,
+                  -- bufnr = bufnr,
+                -- }
+                )
               end,
             })
           end
@@ -68,7 +69,6 @@ return {
       })
     end,
   },
-
   {
     "jay-babu/mason-null-ls.nvim",
     dependencies = { "mason.nvim", "null-ls.nvim" },

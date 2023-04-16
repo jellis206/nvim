@@ -3,28 +3,28 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = {
       "jose-elias-alvarez/typescript.nvim",
-      init = function()
-        require("lazyvim.util").on_attach(function(_, buffer)
-          -- stylua: ignore
-          vim.keymap.set( "n", "<leader>co", "TypescriptOrganizeImports", { buffer = buffer, desc = "Organize Imports" })
-          vim.keymap.set("n", "<leader>cR", "TypescriptRenameFile", { desc = "Rename File", buffer = buffer })
-          vim.keymap.set("n", "<leader>cu", "TypescriptRemoveUnused", { desc = "Remove Unused Variables", buffer = buffer })
-        end)
-      end,
     },
-    ---@class PluginLspOpts
-    opts = {
-      ---@type lspconfig.options
-      servers = {
-        -- typescript will be automatically installed with mason and loaded with lspconfig
-        tsserver = {},
-        -- angularls will be automatically installed with mason and loaded with lspconfig
+    opts = function(_, opts)
+      vim.list_extend(opts.servers, {
         angularls = {
           root_dir = function(fname)
             return vim.loop.cwd()
           end,
-        },
-      },
+        }
+      })
+    end,
+    setup = {
+      tsserver = function(_, opts)
+        require("lazyvim.util").on_attach(function(client, buffer)
+          if client.name == "tsserver" then
+            vim.keymap.set("n", "<leader>co", "<cmd>TypescriptOrganizeImports<CR>", { buffer = buffer, desc = "Organize Imports" })
+            vim.keymap.set("n", "<leader>cR", "<cmd>TypescriptRenameFile<CR>", { desc = "Rename File", buffer = buffer })
+            vim.keymap.set("n", "<leader>cu", "<cmd>TypescriptRemoveUnused<CR>", { desc = "Remove Unused Variables", buffer = buffer })
+          end
+        end)
+        require("typescript").setup({ server = opts })
+        return true
+      end,
     },
   },
 }
