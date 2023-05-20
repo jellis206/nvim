@@ -4,19 +4,53 @@ return {
     opts = function(_, opts)
       -- ensure these language parsers are installed
       vim.list_extend(opts.ensure_installed, {
-          ensure_installed = {
-          -- Common
-          'html', 'css', 'javascript', 'typescript', 'c', 'cpp', 'json', 'java', 'python', 'rust',
-          -- Util
-          'comment', 'diff', 'git_rebase', 'gitattributes', 'gitcommit', 'gitconfig', 'gitignore',
-          'help', 'query', 'regex', 'jsonc', 'json5',
-          -- Less common
-          'bash', 'latex', 'lua', 'markdown', 'markdown_inline', 'vim', 'jsx', 'go', 'tsx', 'toml', 
-          'yaml', 'dockerfile', 'graphql',
-          -- Misc
-          'elixir', 'http', 'llvm', 'make', 'r', 'sql'
-        },
+        -- Common
+        'html',
+        'css',
+        'javascript',
+        'typescript',
+        'c',
+        'cpp',
+        'json',
+        'java',
+        'python',
+        'rust',
+
+        -- Util
+        'comment',
+        'diff',
+        'git_rebase',
+        'gitattributes',
+        'gitcommit',
+        'gitignore',
+        'help',
+        'query',
+        'regex',
+        'jsonc',
+        'json5',
+
+        -- Less common
+        'bash',
+        'latex',
+        'lua',
+        'markdown',
+        'markdown_inline',
+        'vim',
+        'go',
+        'tsx',
+        'toml',
+        'yaml',
+        'dockerfile',
+        'graphql',
+
+        -- Misc
+        'elixir',
+        'http',
+        'llvm',
+        'make',
+        'r',
+        'sql'
       })
-    end,
-  },
+    end
+  }
 }
