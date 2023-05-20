@@ -41,21 +41,8 @@ return {
         },
       },
       highlights = {
-        fill = {
-          fg = "<colour-value-here>",
-          bg = "<colour-value-here>",
-        },
         background = {
-          fg = "<colour-value-here>",
           bg = "031627",
-        },
-        tab = {
-          fg = "<colour-value-here>",
-          bg = "<colour-value-here>",
-        },
-        tab_selected = {
-          fg = "<colour-value-here>",
-          bg = "<colour-value-here>",
         },
       },
     },
