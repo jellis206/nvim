@@ -4,7 +4,8 @@ return {
     requires = "kyazdani42/nvim-web-devicons",
     opts = {
       options = {
-        separator_style = "slant",
+        themable = true,
+        separator_style = "slope",
         indicator = "underline",
         numbers = "ordinal",
         number_style = "superscript",
@@ -29,7 +30,7 @@ return {
         show_tab_indicators = true,
         persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
         enforce_regular_tabs = false,
-        always_show_bufferline = true,
+        always_show_bufferline = false,
         sort_by = "id",
         offsets = {
           {
@@ -38,11 +39,6 @@ return {
             highlight = "Directory",
             text_align = "left",
           },
-        },
-      },
-      highlights = {
-        background = {
-          bg = "031627",
         },
       },
     },
