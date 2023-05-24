@@ -25,8 +25,6 @@ return {
         "gitignore",
         "query",
         "regex",
-        "jsonc",
-        "json5",
 
         -- Less common
         "bash",
