@@ -37,8 +37,8 @@ wk.register({
   m = { "<cmd>GrapplePopup tags<cr>", "Grapple popup tags" },
 }, { prefix = "<leader>" })
 
--- use jj in insert mode to escape
-map("i", "jj", "<esc>")
+map("i", "jj", "<esc>", { desc = "Escape insert mode" })
 
--- copy current file path to clipboard
-map("n", "cp", "<cmd>let @+ = expand('%:p')<cr>")
+map("n", "cp", "<cmd>let @+ = expand('%:p')<cr>", { desc = "Copy current file path to clipboard" })
+
+map("n", "<leader>ut", vim.cmd.UndotreeToggle, { desc = "Toggle undotree" })
