@@ -2,15 +2,15 @@ return {
   {
     "neovim/nvim-lspconfig",
     dependencies = {
-      "jose-elias-alvarez/typescript.nvim"
+      "jose-elias-alvarez/typescript.nvim",
     },
     opts = function(_, opts)
       vim.list_extend(opts.servers, {
         angularls = {
-          root_dir = function(fname)
+          root_dir = function()
             return vim.loop.cwd()
-          end
-        }
+          end,
+        },
       })
     end,
     setup = {
@@ -19,23 +19,23 @@ return {
           if client.name == "tsserver" then
             vim.keymap.set("n", "<leader>co", "<cmd>TypescriptOrganizeImports<CR>", {
               buffer = buffer,
-              desc = "Organize Imports"
+              desc = "Organize Imports",
             })
             vim.keymap.set("n", "<leader>cR", "<cmd>TypescriptRenameFile<CR>", {
               desc = "Rename File",
-              buffer = buffer
+              buffer = buffer,
             })
             vim.keymap.set("n", "<leader>cu", "<cmd>TypescriptRemoveUnused<CR>", {
               desc = "Remove Unused Variables",
-              buffer = buffer
+              buffer = buffer,
             })
           end
         end)
         require("typescript").setup({
-          server = opts
+          server = opts,
         })
         return true
-      end
-    }
-  }
+      end,
+    },
+  },
 }
