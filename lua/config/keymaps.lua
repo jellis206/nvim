@@ -1,8 +1,5 @@
 local Util = require("lazyvim.util")
 local wk = require("which-key")
--- Keymaps are automatically loaded on the VeryLazy event
--- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
 local keymap = vim.keymap
 keymap.set("n", "x", '"_x')
 keymap.set("i", "<C-e>", "<C-o>$") -- move to beginning of line
@@ -36,9 +33,9 @@ wk.register({
   a = { "<cmd>GrappleToggle<cr>", "Grapple toggle" },
   m = { "<cmd>GrapplePopup tags<cr>", "Grapple popup tags" },
 }, { prefix = "<leader>" })
-
 map("i", "jj", "<esc>", { desc = "Escape insert mode" })
-
 map("n", "cp", "<cmd>let @+ = expand('%:p')<cr>", { desc = "Copy current file path to clipboard" })
-
-map("n", "<leader>ut", vim.cmd.UndotreeToggle, { desc = "Toggle undotree" })
+map("n", "<leader>ul", function()
+  Util.toggle("relativenumber")
+end, { desc = "Toggle Relative Line #" })
+map("n", "<leader>ut", "<cmd>Telescope undo<cr>", { desc = "Telescope Undo" })

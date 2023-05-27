@@ -1,4 +1,4 @@
-return { 
+return {
   {
     "L3MON4D3/LuaSnip",
     keys = function()
@@ -23,11 +23,11 @@ return {
       local cmp = require("cmp")
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
+        ["<CR>"] = cmp.mapping.confirm({ select = false }),
+        ["D-e"] = cmp.mapping.abort(),
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             return cmp.confirm({ select = true })
-            -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-            -- that way you will only jump inside the snippet region
           elseif luasnip.expand_or_jumpable() then
             luasnip.expand_or_jump()
           elseif has_words_before() then
