@@ -13,6 +13,16 @@ return {
     },
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
+      local cmp_enabled = true
+      vim.api.nvim_create_user_command("ToggleAutoComplete", function()
+        if cmp_enabled then
+          require("cmp").setup.buffer({ enabled = false })
+          cmp_enabled = false
+        else
+          require("cmp").setup.buffer({ enabled = true })
+          cmp_enabled = true
+        end
+      end, {})
       local has_words_before = function()
         unpack = unpack or table.unpack
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -24,7 +34,6 @@ return {
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
         ["<CR>"] = cmp.mapping.confirm({ select = false }),
-        ["D-e"] = cmp.mapping.abort(),
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             return cmp.confirm({ select = true })

@@ -22,20 +22,21 @@ wk.register({
   ["/"] = { Util.telescope("live_grep", { cwd = false }), "Grep (cwd)" },
   t = {
     name = "+Telescope",
-    o = { "<cmd>Telescope oldfiles<cr>", "oldfiles" },
-    r = { "<cmd>Telescope resume<cr>", "resume" },
+    o = { "<cmd>Telescope oldfiles<cr>", "Oldfiles" },
+    r = { "<cmd>Telescope resume<cr>", "Resume" },
+    u = { "<cmd>Telescope undo<cr>", "Undotree" },
   },
   bl = { "<cmd>BufferLineCloseRight<cr>", "BufferLineCloseRight" },
   bh = { "<cmd>BufferLineCloseLeft<cr>", "BufferLineCloseLeft" },
-  ["'"] = { "<cmd>Telescope jumplist<cr>", "jumplist" },
-  j = { "<cmd>GrappleCycle forward<cr>", "Grapple cycle forward" },
+  ["'"] = { "<cmd>Telescope jumplist<cr>", "Jumplist" },
+  j = { "<cmd>GrappleCycle forward<cr>", "Grapple Cycle Forward" },
   k = { "<cmd>GrappleCycle backward<cr>", "Grapple cycle backward" },
-  a = { "<cmd>GrappleToggle<cr>", "Grapple toggle" },
-  m = { "<cmd>GrapplePopup tags<cr>", "Grapple popup tags" },
+  a = { "<cmd>GrappleToggle<cr>", "Grapple Toggle" },
+  m = { "<cmd>GrapplePopup tags<cr>", "Grapple Popup Tags" },
 }, { prefix = "<leader>" })
-map("i", "jj", "<esc>", { desc = "Escape insert mode" })
-map("n", "cp", "<cmd>let @+ = expand('%:p')<cr>", { desc = "Copy current file path to clipboard" })
+map("i", "jj", "<esc>", { desc = "Escape Insert Mode" })
+map("n", "cp", "<cmd>let @+ = expand('%:p')<cr>", { desc = "Copy Current File Path" })
 map("n", "<leader>ul", function()
   Util.toggle("relativenumber")
 end, { desc = "Toggle Relative Line #" })
-map("n", "<leader>ut", "<cmd>Telescope undo<cr>", { desc = "Telescope Undo" })
+map("n", "<leader>ua", "<cmd>ToggleAutoComplete<cr>", { desc = "Toggle Autocomplete" })
