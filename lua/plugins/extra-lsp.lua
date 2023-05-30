@@ -4,15 +4,15 @@ return {
     dependencies = {
       "jose-elias-alvarez/typescript.nvim",
     },
-    opts = function(_, opts)
-      vim.list_extend(opts.servers, {
+    opts = {
+      servers = {
         angularls = {
-          root_dir = function()
+          root_dir = function(fname)
             return vim.loop.cwd()
           end,
         },
-      })
-    end,
+      },
+    },
     setup = {
       tsserver = function(_, opts)
         require("lazyvim.util").on_attach(function(client, buffer)
