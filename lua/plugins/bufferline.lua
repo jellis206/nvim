@@ -6,7 +6,7 @@ return {
         themable = true,
         separator_style = "slope",
         indicator = "underline",
-        numbers = "ordinal",
+        numbers = "none",
         number_style = "superscript",
         mappings = true,
         buffer_close_icon = "",
@@ -30,7 +30,7 @@ return {
         persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
         enforce_regular_tabs = false,
         always_show_bufferline = false,
-        sort_by = "id",
+        sort_by = "extension",
         offsets = {
           {
             filetype = "neo-tree",
