@@ -1,5 +1,3 @@
-if true then return {} end
-
 return {
   {
     "akinsho/bufferline.nvim",
@@ -32,7 +30,7 @@ return {
         persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
         enforce_regular_tabs = false,
         always_show_bufferline = false,
-        sort_by = "extension",
+        sort_by = "relative_directory",
         offsets = {
           {
             filetype = "neo-tree",
