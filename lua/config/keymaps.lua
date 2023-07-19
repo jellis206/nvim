@@ -2,8 +2,6 @@ local Util = require("lazyvim.util")
 local wk = require("which-key")
 local keymap = vim.keymap
 keymap.set("n", "x", '"_x')
-keymap.set("i", "<C-e>", "<C-o>$") -- move to beginning of line
-keymap.set("i", "<C-a>", "<C-o>0") -- move to end of line
 
 local function map(mode, lhs, rhs, opts)
   local keys = require("lazy.core.handler").handlers.keys
@@ -26,6 +24,7 @@ wk.register({
     r = { "<cmd>Telescope resume<cr>", "Resume" },
     u = { "<cmd>Telescope undo<cr>", "Undotree" },
   },
+  bf = { Util.telescope("live_grep", { grep_open_files = true }), "Grep in open buffers" },
   bl = { "<cmd>BufferLineCloseRight<cr>", "BufferLineCloseRight" },
   bh = { "<cmd>BufferLineCloseLeft<cr>", "BufferLineCloseLeft" },
   ["'"] = { "<cmd>Telescope jumplist<cr>", "Jumplist" },
@@ -33,17 +32,81 @@ wk.register({
   k = { "<cmd>GrappleCycle backward<cr>", "Grapple cycle backward" },
   a = { "<cmd>GrappleToggle<cr>", "Grapple Toggle" },
   m = { "<cmd>GrapplePopup tags<cr>", "Grapple Popup Tags" },
+  cp = { "<cmd> let @+ = expand('%:p') <cr>", "Copy Current File Path" },
+  ua = { "<cmd>ToggleAutoComplete<cr>", "Toggle Autocomplete" },
+  ul = {
+    function()
+      Util.toggle("relativenumber")
+    end,
+    "Toggle Relative Line #",
+  },
+  r = {
+    name = "+Refactoring",
+    b = {
+      function()
+        require("refactoring").refactor("Extract Block")
+      end,
+      "Extract Block",
+    },
+    bf = {
+      function()
+        require("refactoring").refactor("Extract Block To File")
+      end,
+      "Extract Block To File",
+    },
+    r = {
+      function()
+        require("telescope").extensions.refactoring.refactors()
+      end,
+      "Refactor",
+    },
+    i = {
+      function()
+        require("refactoring").refactor("Inline Variable")
+      end,
+      "Inline Variable",
+    },
+  },
 }, { prefix = "<leader>" })
-map("i", "jj", "<esc>", { desc = "Escape Insert Mode" })
-map("n", "cp", "<cmd>let @+ = expand('%:p')<cr>", { desc = "Copy Current File Path" })
-map("n", "<leader>ul", function()
-  Util.toggle("relativenumber")
-end, { desc = "Toggle Relative Line #" })
-map("n", "<leader>ua", "<cmd>ToggleAutoComplete<cr>", { desc = "Toggle Autocomplete" })
-map({"n", "x"}, "<leader>rr", function () require("telescope").extensions.refactoring.refactors() end, { desc = "Refactor" })
-map("x", "<leader>re", function () require("refactoring").refactor("Extract Function") end, { desc = "Extract Function" })
-map("x", "<leader>rf", function () require("refactoring").refactor("Extract Function To File") end, { desc = "Extract Function To File" })
-map("x", "<leader>rv", function () require("refactoring").refactor("Extract Variable") end, { desc = "Extract Variable" })
-map({"n", "x"}, "<leader>ri", function () require("refactoring").refactor("Inline Variable") end, { desc = "Inline Variable" })
-map("n", "<leader>rb", function () require("refactoring").refactor("Extract Block") end, { desc = "Extract Block" })
-map("n", "<leader>rb", function () require("refactoring").refactor("Extract Block To File") end, { desc = "Extract Block To File" })
+
+wk.register({
+  r = {
+    name = "+Refactoring",
+    e = {
+      function()
+        require("refactoring").refactor("Extract Function")
+      end,
+      "Extract Function",
+    },
+    ef = {
+      function()
+        require("refactoring").refactor("Extract Function To File")
+      end,
+      "Extract Function To File",
+    },
+    i = {
+      function()
+        require("refactoring").refactor("Inline Variable")
+      end,
+      "Inline Variable",
+    },
+    r = {
+      function()
+        require("telescope").extensions.refactoring.refactors()
+      end,
+      "Refactor",
+    },
+    v = {
+      function()
+        require("refactoring").refactor("Extract Variable")
+      end,
+      "Extract Variable",
+    },
+  },
+}, { prefix = "<leader>", mode = "x" })
+
+wk.register({
+  jj = { "<esc>", "Escape Insert Mode" },
+  ["<C-e>"] = { "<c-o>$", "Move to end of line" },
+  ["<C-a>"] = { "<c-o>0", "Move to beginning of line" },
+}, { mode = "i" })
