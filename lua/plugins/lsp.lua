@@ -5,7 +5,7 @@ return {
       "jose-elias-alvarez/typescript.nvim",
     },
     opts = {
-      autoformat = false,
+      autoformat = true,
       servers = {
         angularls = {
           root_dir = function(fname)
