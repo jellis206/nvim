@@ -50,5 +50,4 @@ return {
       })
     end,
   },
-  { "nvim-treesitter/nvim-treesitter-angular" },
 }
