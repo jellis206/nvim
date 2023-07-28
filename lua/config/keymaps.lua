@@ -31,6 +31,7 @@ wk.register({
   j = { "<cmd>GrappleCycle forward<cr>", "Grapple Cycle Forward" },
   k = { "<cmd>GrappleCycle backward<cr>", "Grapple cycle backward" },
   a = { "<cmd>GrappleToggle<cr>", "Grapple Toggle" },
+  A = { "<cmd>GrappleReset<cr>", "Clear All Grapple Tags" },
   m = { "<cmd>GrapplePopup tags<cr>", "Grapple Popup Tags" },
   cp = { "<cmd> let @+ = expand('%:p') <cr>", "Copy Current File Path" },
   ua = { "<cmd>ToggleAutoComplete<cr>", "Toggle Autocomplete" },
