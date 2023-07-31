@@ -41,6 +41,7 @@ wk.register({
     end,
     "Toggle Relative Line #",
   },
+  up = { "<cmd>GitBlameToggle<cr>", "Toggle Git Blame" },
   r = {
     name = "+Refactoring",
     b = {
