@@ -3,19 +3,7 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = {
       "jose-elias-alvarez/typescript.nvim",
-    },
-    opts = {
-      autoformat = true,
-      servers = {
-        angularls = {
-          root_dir = function(fname)
-            return vim.loop.cwd()
-          end,
-        },
-      },
-    },
-    setup = {
-      tsserver = function(_, opts)
+      init = function()
         require("lazyvim.util").on_attach(function(client, buffer)
           if client.name == "tsserver" then
             vim.keymap.set("n", "<leader>co", "<cmd>TypescriptOrganizeImports<CR>", {
@@ -32,11 +20,18 @@ return {
             })
           end
         end)
-        require("typescript").setup({
-          server = opts,
-        })
-        return true
       end,
+    },
+    opts = {
+      autoformat = true,
+      servers = {
+        tsserver = {},
+        angularls = {
+          root_dir = function(fname)
+            return vim.loop.cwd()
+          end,
+        },
+      },
     },
   },
 }
