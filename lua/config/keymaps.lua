@@ -18,6 +18,11 @@ end
 wk.register({
   ["<space>"] = { Util.telescope("files", { cwd = false }), "Find Files (cwd)" },
   ["/"] = { Util.telescope("live_grep", { cwd = false }), "Grep (cwd)" },
+  s = {
+    name = "+Search",
+    W = { Util.telescope("grep_string", { word_match = "-w" }), "Word (root dir)" },
+    w = { Util.telescope("grep_string", { word_match = "-w", cwd = false }), "Word (cwd)" },
+  },
   t = {
     name = "+Telescope",
     o = { "<cmd>Telescope oldfiles<cr>", "Oldfiles" },
@@ -70,6 +75,14 @@ wk.register({
     },
   },
 }, { prefix = "<leader>" })
+
+wk.register({
+  s = {
+    name = "+Search",
+    W = { Util.telescope("grep_string"), "Selection (root dir)" },
+    w = { Util.telescope("grep_string", { cwd = false }), "Selection (cwd)" },
+  },
+}, { prefix = "<leader>", mode = "v" })
 
 wk.register({
   r = {
