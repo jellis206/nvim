@@ -32,27 +32,78 @@ return {
       local luasnip = require("luasnip")
       local cmp = require("cmp")
 
+      local select_next = function()
+        if cmp.visible() then
+          return cmp.confirm({ select = true })
+        elseif luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
+        elseif has_words_before() then
+          cmp.complete()
+        else
+          return
+        end
+      end
+
+      local select_prev = function()
+        if cmp.visible() then
+          cmp.select_prev_item()
+        elseif luasnip.jumpable(-1) then
+          luasnip.jump(-1)
+        else
+          return
+        end
+      end
+
+      local close_cmp = function()
+        if cmp.visible() then
+          cmp.close()
+        else
+          return
+        end
+      end
+
+      local scroll_docs = function(scrollNum)
+        if cmp.visible() then
+          cmp.scroll(scrollNum)
+        else
+          return
+        end
+      end
+
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
-        ["<CR>"] = cmp.mapping.confirm({ select = false }),
-        ["<Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            return cmp.confirm({ select = true })
-          elseif luasnip.expand_or_jumpable() then
-            luasnip.expand_or_jump()
-          elseif has_words_before() then
-            cmp.complete()
-          else
-            fallback()
-          end
+        ["<CR>"] = cmp.mapping(function()
+          cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace })
+        end, {
+          "c",
+          "s",
+        }),
+        ["<Tab>"] = cmp.mapping(function()
+          select_next()
+        end, { "c", "s" }),
+        ["<S-Tab>"] = cmp.mapping(function()
+          select_prev()
+        end, { "c", "s" }),
+        ["<C-i>"] = cmp.mapping(function()
+          cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace })
+        end, {
+          "i",
+          "s",
+        }),
+        ["<C-e>"] = cmp.mapping.close(),
+        ["<C-y>"] = cmp.mapping(function()
+          close_cmp()
         end, { "i", "s" }),
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_prev_item()
-          elseif luasnip.jumpable(-1) then
-            luasnip.jump(-1)
-          else
-            fallback()
-          end
+        ["<C-d>"] = cmp.mapping(function()
+          close_cmp()
+        end, { "i", "s" }),
+        ["<C-u>"] = cmp.mapping(function()
+          close_cmp()
+        end, { "i", "s" }),
+        ["<C-f>"] = cmp.mapping(function()
+          scroll_docs(4)
+        end, { "i", "s" }),
+        ["<C-b>"] = cmp.mapping(function()
+          scroll_docs(-4)
         end, { "i", "s" }),
       })
     end,
