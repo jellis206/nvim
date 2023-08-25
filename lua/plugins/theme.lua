@@ -5,14 +5,12 @@ return {
     lazy = true,
     priority = 1000,
   },
-
   {
     "LazyVim/LazyVim",
     opts = {
       colorscheme = "nightfly",
     },
   },
-
   -- {
   --   vim.api.nvim_command([[
   --   augroup ChangeBackgroudColour
@@ -20,7 +18,6 @@ return {
   --   augroup END
   --   ]])
   -- },
-
   {
     "rcarriga/nvim-notify",
     keys = {
