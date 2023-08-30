@@ -1,10 +1,10 @@
 return {
-  {
-    "L3MON4D3/LuaSnip",
-    keys = function()
-      return {}
-    end,
-  },
+  --{
+  --"L3MON4D3/LuaSnip",
+  --keys = function()
+  --return {}
+  --end,
+  --},
   -- then: setup supertab in cmp
   {
     "hrsh7th/nvim-cmp",
@@ -71,38 +71,24 @@ return {
       end
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
-        ["<CR>"] = cmp.mapping(function()
-          cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace })
-        end, {
-          "c",
-          "s",
-        }),
-        ["<Tab>"] = cmp.mapping(function()
-          select_next()
-        end, { "c", "s" }),
-        ["<S-Tab>"] = cmp.mapping(function()
-          select_prev()
-        end, { "c", "s" }),
+        ["<CR>"] = cmp.config.disable,
+        ["<Tab>"] = cmp.config.disable,
+        ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Replace }),
+        ["<C-b>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Replace }),
         ["<C-i>"] = cmp.mapping(function()
           cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace })
         end, {
           "i",
           "s",
         }),
-        ["<C-e>"] = cmp.mapping.close(),
-        ["<C-y>"] = cmp.mapping(function()
-          close_cmp()
-        end, { "i", "s" }),
-        ["<C-d>"] = cmp.mapping(function()
-          close_cmp()
-        end, { "i", "s" }),
+        ["<C-d>"] = cmp.mapping.abort(),
         ["<C-u>"] = cmp.mapping(function()
           close_cmp()
         end, { "i", "s" }),
-        ["<C-f>"] = cmp.mapping(function()
+        ["<C-j>"] = cmp.mapping(function()
           scroll_docs(4)
         end, { "i", "s" }),
-        ["<C-b>"] = cmp.mapping(function()
+        ["<C-k>"] = cmp.mapping(function()
           scroll_docs(-4)
         end, { "i", "s" }),
       })
