@@ -1,11 +1,4 @@
 return {
-  --{
-  --"L3MON4D3/LuaSnip",
-  --keys = function()
-  --return {}
-  --end,
-  --},
-  -- then: setup supertab in cmp
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
@@ -13,32 +6,39 @@ return {
     },
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
-      local cmp_enabled = true
-      vim.api.nvim_create_user_command("ToggleAutoComplete", function()
-        if cmp_enabled then
-          require("cmp").setup.buffer({ enabled = false })
-          cmp_enabled = false
-        else
-          require("cmp").setup.buffer({ enabled = true })
-          cmp_enabled = true
-        end
-      end, {})
-      local has_words_before = function()
-        unpack = unpack or table.unpack
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-      end
-
       local luasnip = require("luasnip")
       local cmp = require("cmp")
 
+      local cmp_enabled = true
+      vim.api.nvim_create_user_command("ToggleAutoComplete", function()
+        if cmp_enabled then
+          cmp.setup.buffer({ enabled = false })
+          cmp_enabled = false
+        else
+          cmp.setup.buffer({ enabled = true })
+          cmp_enabled = true
+        end
+      end, {})
+
+      local select_item = function()
+        local entry = cmp.get_selected_entry()
+
+        if entry.source.name == "Luasnip" then
+          if entry.source:is_available() then
+            cmp.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace })
+          else
+            luasnip.expand_or_jump()
+          end
+        else
+          cmp.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace })
+        end
+      end
+
       local select_next = function()
         if cmp.visible() then
-          return cmp.confirm({ select = true })
+          cmp.select_next_item({ behavior = cmp.SelectBehavior.Replace })
         elseif luasnip.expand_or_jumpable() then
           luasnip.expand_or_jump()
-        elseif has_words_before() then
-          cmp.complete()
         else
           return
         end
@@ -46,17 +46,9 @@ return {
 
       local select_prev = function()
         if cmp.visible() then
-          cmp.select_prev_item()
+          cmp.select_prev_item({ behavior = cmp.SelectBehavior.Replace })
         elseif luasnip.jumpable(-1) then
           luasnip.jump(-1)
-        else
-          return
-        end
-      end
-
-      local close_cmp = function()
-        if cmp.visible() then
-          cmp.close()
         else
           return
         end
@@ -73,18 +65,20 @@ return {
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
         ["<CR>"] = cmp.config.disable,
         ["<Tab>"] = cmp.config.disable,
-        ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Replace }),
-        ["<C-b>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Replace }),
+        ["<S-Tab>"] = cmp.config.disable,
         ["<C-i>"] = cmp.mapping(function()
-          cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace })
+          select_item()
         end, {
           "i",
           "s",
         }),
-        ["<C-d>"] = cmp.mapping.abort(),
-        ["<C-u>"] = cmp.mapping(function()
-          close_cmp()
+        ["<C-n>"] = cmp.mapping(function()
+          select_next()
         end, { "i", "s" }),
+        ["<C-b>"] = cmp.mapping(function()
+          select_prev()
+        end, { "i", "s" }),
+        ["<C-u>"] = cmp.mapping.abort(),
         ["<C-j>"] = cmp.mapping(function()
           scroll_docs(4)
         end, { "i", "s" }),
