@@ -1,14 +1,20 @@
 return {
+  -- {
+  --   "bluz71/vim-nightfly-colors",
+  --   name = "nightfly",
+  --   lazy = true,
+  --   priority = 1000,
+  -- },
   {
-    "bluz71/vim-nightfly-colors",
-    name = "nightfly",
+    "rose-pine/neovim",
+    name = "rose-pine",
     lazy = true,
     priority = 1000,
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "nightfly",
+      colorscheme = "rose-pine",
     },
   },
   -- {
