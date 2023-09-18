@@ -1,3 +1,5 @@
+local util = require("lspconfig/util")
+
 return {
   {
     "neovim/nvim-lspconfig",
@@ -25,11 +27,11 @@ return {
     opts = {
       autoformat = true,
       servers = {
-        tsserver = {},
+        tsserver = {
+          root_dir = util.root_pattern(".git", "nx.json", "package.json", "tsconfig.json", "jsconfig.json"),
+        },
         angularls = {
-          root_dir = function(fname)
-            return vim.loop.cwd()
-          end,
+          root_dir = util.root_pattern(".git", "nx.json", "angular.json", "tsconfig.json"),
         },
       },
     },
