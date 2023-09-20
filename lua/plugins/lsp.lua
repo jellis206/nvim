@@ -1,4 +1,4 @@
-local util = require("lspconfig/util")
+-- local util = require("lspconfig/util")
 
 return {
   {
@@ -28,10 +28,13 @@ return {
       autoformat = true,
       servers = {
         tsserver = {
-          root_dir = util.root_pattern(".git", "nx.json", "package.json", "tsconfig.json", "jsconfig.json"),
+          -- root_dir = util.root_pattern(".git", "nx.json", "package.json", "tsconfig.json", "jsconfig.json"),
         },
         angularls = {
-          root_dir = util.root_pattern(".git", "nx.json", "angular.json", "tsconfig.json"),
+          -- root_dir = util.root_pattern(".git", "nx.json", "angular.json", "tsconfig.json"),
+          root_dir = function()
+            return vim.loop.cwd()
+          end,
         },
       },
     },
