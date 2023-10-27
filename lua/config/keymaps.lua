@@ -40,6 +40,7 @@ wk.register({
   m = { "<cmd>GrapplePopup tags<cr>", "Grapple Popup Tags" },
   cp = { "<cmd> let @+ = expand('%:p') <cr>", "Copy Current File Path" },
   ua = { "<cmd>ToggleAutoComplete<cr>", "Toggle Autocomplete" },
+  cs = { "<cmd>SymbolsOutline<cr>", "Symbols Outline" },
   ul = {
     function()
       Util.toggle("relativenumber")
