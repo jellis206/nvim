@@ -25,18 +25,18 @@ return {
 
         if entry.source.name == "Luasnip" then
           if entry.source:is_available() then
-            cmp.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace })
+            cmp.confirm({ select = true })
           else
             luasnip.expand_or_jump()
           end
         else
-          cmp.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace })
+          cmp.confirm({ select = true })
         end
       end
 
       local select_next = function()
         if cmp.visible() then
-          cmp.select_next_item({ behavior = cmp.SelectBehavior.Replace })
+          cmp.select_next_item()
         elseif luasnip.expand_or_jumpable() then
           luasnip.expand_or_jump()
         else
@@ -46,7 +46,7 @@ return {
 
       local select_prev = function()
         if cmp.visible() then
-          cmp.select_prev_item({ behavior = cmp.SelectBehavior.Replace })
+          cmp.select_prev_item()
         elseif luasnip.jumpable(-1) then
           luasnip.jump(-1)
         else
