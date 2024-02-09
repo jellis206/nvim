@@ -62,6 +62,12 @@ return {
           root_dir = function()
             return vim.loop.cwd()
           end,
+          -- root_dir = function()
+          --   return vim.fs.find({ ".git", "nx.json", "package.json" }, {
+          --     upward = true,
+          --     stop = vim.uv.os_homedir(),
+          --   })
+          -- end,
         },
       },
     },
