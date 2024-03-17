@@ -3,17 +3,6 @@ local wk = require("which-key")
 local keymap = vim.keymap
 keymap.set("n", "x", '"_x')
 
-local function map(mode, lhs, rhs, opts)
-  local keys = require("lazy.core.handler").handlers.keys
-  ---@cast keys LazyKeysHandler
-  -- do not create the keymap if a lazy keys handler exists
-  if not keys.active[keys.parse({ lhs, mode = mode }).id] then
-    opts = opts or {}
-    opts.silent = opts.silent ~= false
-    vim.keymap.set(mode, lhs, rhs, opts)
-  end
-end
-
 -- which key
 wk.register({
   ["<space>"] = { Util.telescope("files", { cwd = false }), "Find Files (cwd)" },
