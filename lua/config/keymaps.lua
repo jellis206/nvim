@@ -33,11 +33,11 @@ wk.register({
   bl = { "<cmd>BufferLineCloseRight<cr>", "BufferLineCloseRight" },
   bh = { "<cmd>BufferLineCloseLeft<cr>", "BufferLineCloseLeft" },
   ["'"] = { "<cmd>Telescope jumplist<cr>", "Jumplist" },
-  j = { "<cmd>GrappleCycle forward<cr>", "Grapple Cycle Forward" },
-  k = { "<cmd>GrappleCycle backward<cr>", "Grapple cycle backward" },
-  a = { "<cmd>GrappleToggle<cr>", "Grapple Toggle" },
-  A = { "<cmd>GrappleReset<cr>", "Clear All Grapple Tags" },
-  m = { "<cmd>GrapplePopup tags<cr>", "Grapple Popup Tags" },
+  j = { "<cmd>Grapple cycle forward<cr>", "Grapple Cycle Forward" },
+  k = { "<cmd>Grapple cycle backward<cr>", "Grapple cycle backward" },
+  a = { "<cmd>Grapple toggle<cr>", "Grapple Toggle" },
+  A = { "<cmd>Grapple reset<cr>", "Clear All Grapple Tags" },
+  m = { "<cmd>Grapple open_tags<cr>", "Grapple Popup Tags" },
   cp = { "<cmd> let @+ = expand('%:p') <cr>", "Copy Current File Path" },
   ua = { "<cmd>ToggleAutoComplete<cr>", "Toggle Autocomplete" },
   cs = { "<cmd>SymbolsOutline<cr>", "Symbols Outline" },
@@ -47,7 +47,7 @@ wk.register({
     end,
     "Toggle Relative Line #",
   },
-  up = { "<cmd>GitBlameToggle<cr>", "Toggle Git Blame" },
+  ug = { "<cmd>GitBlameToggle<cr>", "Toggle Git Blame" },
   r = {
     name = "+Refactoring",
     b = {
@@ -126,3 +126,20 @@ wk.register({
   ["<C-e>"] = { "<c-o>$", "Move to end of line" },
   ["<C-a>"] = { "<c-o>0", "Move to beginning of line" },
 }, { mode = "i" })
+
+wk.register({
+  fe = {
+    function()
+      require("neo-tree.command").execute({ toggle = true, dir = vim.loop.cwd() })
+    end,
+    "Explorer NeoTree (cwd)",
+  },
+  fE = {
+    function()
+      require("neo-tree.command").execute({ toggle = true, dir = Util.root() })
+    end,
+    "Explorer NeoTree (root dir)",
+  },
+  e = { "<leader>fe", "Explorer NeoTree (cwd)", remap = true },
+  E = { "<leader>fE", "Explorer NeoTree (root dir)", remap = true },
+}, { prefix = "<leader>" })
