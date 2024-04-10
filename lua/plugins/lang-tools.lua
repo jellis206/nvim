@@ -4,6 +4,7 @@ return {
     opts = {
       ensure_installed = {
         "angular-language-server",
+        "typescript-language-server",
         "clangd",
         "clang-format",
         "cpplint",
