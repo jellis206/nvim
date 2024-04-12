@@ -30,6 +30,7 @@ wk.register({
   cp = { "<cmd> let @+ = expand('%:p') <cr>", "Copy Current File Path" },
   ua = { "<cmd>ToggleAutoComplete<cr>", "Toggle Autocomplete" },
   cs = { "<cmd>SymbolsOutline<cr>", "Symbols Outline" },
+  uc = { "<cmd>ToggleCopilot<cr>", "Toggle Copilot" },
   ul = {
     function()
       Util.toggle("relativenumber")

@@ -20,6 +20,17 @@ return {
         end
       end, {})
 
+      local copilot_enabled = true
+      vim.api.nvim_create_user_command("ToggleCopilot", function()
+        if copilot_enabled then
+          vim.cmd("Copilot disable")
+          copilot_enabled = false
+        else
+          vim.cmd("Copilot enable")
+          copilot_enabled = true
+        end
+      end, {})
+
       local select_item = function()
         local entry = cmp.get_selected_entry()
 
