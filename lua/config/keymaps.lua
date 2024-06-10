@@ -5,8 +5,6 @@ keymap.set("n", "x", '"_x')
 
 -- which key
 wk.register({
-  ["<space>"] = { Util.telescope("files", { cwd = false }), "Find Files (cwd)" },
-  ["/"] = { Util.telescope("live_grep", { cwd = false }), "Grep (cwd)" },
   s = {
     name = "+Search",
     W = { Util.telescope("grep_string", { word_match = "-w" }), "Word (root dir)" },
@@ -38,6 +36,17 @@ wk.register({
     "Toggle Relative Line #",
   },
   ug = { "<cmd>GitBlameToggle<cr>", "Toggle Git Blame" },
+}, { prefix = "<leader>" })
+
+wk.register({
+  s = {
+    name = "+Search",
+    W = { Util.telescope("grep_string"), "Selection (root dir)" },
+    w = { Util.telescope("grep_string", { cwd = false }), "Selection (cwd)" },
+  },
+}, { prefix = "<leader>", mode = "v" })
+
+wk.register({
   r = {
     name = "+Refactoring",
     b = {
@@ -52,39 +61,13 @@ wk.register({
       end,
       "Extract Block To File",
     },
-    r = {
-      function()
-        require("telescope").extensions.refactoring.refactors()
-      end,
-      "Refactor",
-    },
-    i = {
-      function()
-        require("refactoring").refactor("Inline Variable")
-      end,
-      "Inline Variable",
-    },
-  },
-}, { prefix = "<leader>" })
-
-wk.register({
-  s = {
-    name = "+Search",
-    W = { Util.telescope("grep_string"), "Selection (root dir)" },
-    w = { Util.telescope("grep_string", { cwd = false }), "Selection (cwd)" },
-  },
-}, { prefix = "<leader>", mode = "v" })
-
-wk.register({
-  r = {
-    name = "+Refactoring",
-    e = {
+    f = {
       function()
         require("refactoring").refactor("Extract Function")
       end,
       "Extract Function",
     },
-    ef = {
+    ff = {
       function()
         require("refactoring").refactor("Extract Function To File")
       end,
