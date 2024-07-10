@@ -1,22 +1,18 @@
-local Util = require("lazyvim.util")
 local wk = require("which-key")
 local keymap = vim.keymap
 keymap.set("n", "x", '"_x')
 
 -- which key
 wk.register({
+  ["<space>"] = { LazyVim.pick("files", { cwd = false }), "Find Files (cwd)" },
+  ["/"] = { LazyVim.pick("live_grep", { cwd = false }), "Grep (cwd)" },
   s = {
     name = "+Search",
-    W = { Util.telescope("grep_string", { word_match = "-w" }), "Word (root dir)" },
-    w = { Util.telescope("grep_string", { word_match = "-w", cwd = false }), "Word (cwd)" },
+    W = { LazyVim.pick("grep_string", { word_match = "-w" }), "Word (root dir)" },
+    w = { LazyVim.pick("grep_string", { word_match = "-w", cwd = false }), "Word (cwd)" },
   },
-  t = {
-    name = "+Telescope",
-    o = { "<cmd>Telescope oldfiles<cr>", "Oldfiles" },
-    r = { "<cmd>Telescope resume<cr>", "Resume" },
-    u = { "<cmd>Telescope undo<cr>", "Undotree" },
-  },
-  bf = { Util.telescope("live_grep", { grep_open_files = true }), "Grep in open buffers" },
+  ut = { "<cmd>Telescope undo<cr>", "Undotree" },
+  bf = { LazyVim.pick("live_grep", { grep_open_files = true }), "Grep in open buffers" },
   bl = { "<cmd>BufferLineCloseRight<cr>", "BufferLineCloseRight" },
   bh = { "<cmd>BufferLineCloseLeft<cr>", "BufferLineCloseLeft" },
   ["'"] = { "<cmd>Telescope jumplist<cr>", "Jumplist" },
@@ -31,7 +27,7 @@ wk.register({
   uc = { "<cmd>ToggleCopilot<cr>", "Toggle Copilot" },
   ul = {
     function()
-      Util.toggle("relativenumber")
+      LazyVim.toggle("relativenumber")
     end,
     "Toggle Relative Line #",
   },
@@ -41,78 +37,54 @@ wk.register({
 wk.register({
   s = {
     name = "+Search",
-    W = { Util.telescope("grep_string"), "Selection (root dir)" },
-    w = { Util.telescope("grep_string", { cwd = false }), "Selection (cwd)" },
+    W = { LazyVim.pick("grep_string"), "Selection (root dir)" },
+    w = { LazyVim.pick("grep_string", { cwd = false }), "Selection (cwd)" },
   },
 }, { prefix = "<leader>", mode = "v" })
 
 wk.register({
-  r = {
-    name = "+Refactoring",
-    b = {
-      function()
-        require("refactoring").refactor("Extract Block")
-      end,
-      "Extract Block",
-    },
-    bf = {
-      function()
-        require("refactoring").refactor("Extract Block To File")
-      end,
-      "Extract Block To File",
-    },
-    f = {
-      function()
-        require("refactoring").refactor("Extract Function")
-      end,
-      "Extract Function",
-    },
-    ff = {
-      function()
-        require("refactoring").refactor("Extract Function To File")
-      end,
-      "Extract Function To File",
-    },
-    i = {
-      function()
-        require("refactoring").refactor("Inline Variable")
-      end,
-      "Inline Variable",
-    },
-    r = {
-      function()
-        require("telescope").extensions.refactoring.refactors()
-      end,
-      "Refactor",
-    },
-    v = {
-      function()
-        require("refactoring").refactor("Extract Variable")
-      end,
-      "Extract Variable",
-    },
-  },
-}, { prefix = "<leader>", mode = "x" })
-
-wk.register({
   jj = { "<esc>", "Escape Insert Mode" },
-  ["<C-e>"] = { "<c-o>$", "Move to end of line" },
-  ["<C-a>"] = { "<c-o>0", "Move to beginning of line" },
+  ["<C-$>"] = { "<c-o>$", "Move to end of line" },
+  ["<C-0>"] = { "<c-o>0", "Move to beginning of line" },
 }, { mode = "i" })
 
 wk.register({
   fe = {
     function()
-      require("neo-tree.command").execute({ toggle = true, dir = vim.loop.cwd() })
+      require("neo-tree.command").execute({ toggle = true, dir = vim.uv.cwd() })
     end,
     "Explorer NeoTree (cwd)",
   },
   fE = {
     function()
-      require("neo-tree.command").execute({ toggle = true, dir = Util.root() })
+      require("neo-tree.command").execute({ toggle = true, dir = LazyVim.root() })
     end,
     "Explorer NeoTree (root dir)",
   },
   e = { "<leader>fe", "Explorer NeoTree (cwd)", remap = true },
   E = { "<leader>fE", "Explorer NeoTree (root dir)", remap = true },
+}, { prefix = "<leader>" })
+
+--toggleterm
+local terminal = require("toggleterm.terminal").Terminal
+wk.register({
+  t = {
+    name = "+Terminal",
+    t = { "<cmd>ToggleTerm<cr>", "Toggle Terminal" },
+    j = { "<cmd>ToggleTerm size=15 direction=horizontal<cr>", "Toggle Terminal (horizontal)" },
+    h = { "<cmd>ToggleTerm size=70 direction=vertical<cr>", "Toggle Terminal (vertical)" },
+    f = { "<cmd>ToggleTerm direction=float<cr>", "Toggle Terminal (float)" },
+    n = {
+      function()
+        terminal:new():toggle()
+      end,
+      "New Terminal",
+    },
+    c = {
+      function()
+        terminal:close()
+      end,
+      "Close Terminal",
+    },
+  },
 }, { prefix = "<leader>" })
