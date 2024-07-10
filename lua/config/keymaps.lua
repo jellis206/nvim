@@ -4,12 +4,12 @@ keymap.set("n", "x", '"_x')
 
 -- which key
 wk.register({
-  ["<space>"] = { LazyVim.pick("files", { cwd = false }), "Find Files (cwd)" },
-  ["/"] = { LazyVim.pick("live_grep", { cwd = false }), "Grep (cwd)" },
+  ["<space>"] = { LazyVim.pick("files", { root = true }), "Find Files" },
+  ["/"] = { LazyVim.pick("live_grep", { root = true }), "Grep" },
   s = {
     name = "+Search",
-    W = { LazyVim.pick("grep_string", { word_match = "-w" }), "Word (root dir)" },
-    w = { LazyVim.pick("grep_string", { word_match = "-w", cwd = false }), "Word (cwd)" },
+    W = { LazyVim.pick("grep_string", { word_match = "-w", root = false }), "Word (cwd)" },
+    w = { LazyVim.pick("grep_string", { word_match = "-w", root = true }), "Word (root dir)" },
   },
   ut = { "<cmd>Telescope undo<cr>", "Undotree" },
   bf = { LazyVim.pick("live_grep", { grep_open_files = true }), "Grep in open buffers" },
@@ -37,8 +37,8 @@ wk.register({
 wk.register({
   s = {
     name = "+Search",
-    W = { LazyVim.pick("grep_string"), "Selection (root dir)" },
-    w = { LazyVim.pick("grep_string", { cwd = false }), "Selection (cwd)" },
+    W = { LazyVim.pick("grep_string", { root = false }), "Selection (cwd)" },
+    w = { LazyVim.pick("grep_string", { root = true }), "Selection (root dir)" },
   },
 }, { prefix = "<leader>", mode = "v" })
 
@@ -47,23 +47,6 @@ wk.register({
   ["<C-$>"] = { "<c-o>$", "Move to end of line" },
   ["<C-0>"] = { "<c-o>0", "Move to beginning of line" },
 }, { mode = "i" })
-
-wk.register({
-  fe = {
-    function()
-      require("neo-tree.command").execute({ toggle = true, dir = vim.uv.cwd() })
-    end,
-    "Explorer NeoTree (cwd)",
-  },
-  fE = {
-    function()
-      require("neo-tree.command").execute({ toggle = true, dir = LazyVim.root() })
-    end,
-    "Explorer NeoTree (root dir)",
-  },
-  e = { "<leader>fe", "Explorer NeoTree (cwd)", remap = true },
-  E = { "<leader>fE", "Explorer NeoTree (root dir)", remap = true },
-}, { prefix = "<leader>" })
 
 --toggleterm
 local t = require("toggleterm.terminal")
