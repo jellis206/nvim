@@ -66,7 +66,8 @@ wk.register({
 }, { prefix = "<leader>" })
 
 --toggleterm
-local terminal = require("toggleterm.terminal").Terminal
+local t = require("toggleterm.terminal")
+local terminal = t.Terminal
 wk.register({
   t = {
     name = "+Terminal",
@@ -76,15 +77,20 @@ wk.register({
     f = { "<cmd>ToggleTerm direction=float<cr>", "Toggle Terminal (float)" },
     n = {
       function()
-        terminal:new():toggle()
+        local current = t.get_all()[1]
+        local new_direction = "horizontal"
+        if current:is_float() then
+          return
+        elseif current:is_tab() then
+          new_direction = "tab"
+        elseif current.direction == "vertical" then
+          new_direction = "vertical"
+        end
+        print("current direction" .. current.direction)
+        print("New Direction: " .. new_direction)
+        terminal:new({ direction = new_direction }):toggle()
       end,
       "New Terminal",
-    },
-    c = {
-      function()
-        terminal:close()
-      end,
-      "Close Terminal",
     },
   },
 }, { prefix = "<leader>" })
