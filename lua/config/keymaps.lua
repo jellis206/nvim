@@ -69,8 +69,6 @@ wk.register({
         elseif current.direction == "vertical" then
           new_direction = "vertical"
         end
-        print("current direction" .. current.direction)
-        print("New Direction: " .. new_direction)
         terminal:new({ direction = new_direction }):toggle()
       end,
       "New Terminal",

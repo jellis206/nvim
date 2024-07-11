@@ -5,16 +5,22 @@ return {
   --   lazy = true,
   --   priority = 1000,
   -- },
+  --{
+  --  "whatyouhide/vim-gotham",
+  --  name = "gotham",
+  --  lazy = true,
+  --  priority = 1000,
+  --},
   {
-    "whatyouhide/vim-gotham",
-    name = "gotham",
-    lazy = true,
+    "folke/tokyonight.nvim",
+    lazy = false,
     priority = 1000,
+    opts = {},
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "gotham",
+      colorscheme = "tokyonight-moon",
     },
   },
   { "nvim-tree/nvim-web-devicons", lazy = true },
@@ -49,5 +55,9 @@ return {
         return math.floor(vim.o.columns * 0.75)
       end,
     },
+  },
+  {
+    url = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git",
+    name = "rainbow-delimiters",
   },
 }
