@@ -2,76 +2,76 @@ local wk = require("which-key")
 local keymap = vim.keymap
 keymap.set("n", "x", '"_x')
 
--- which key
-wk.register({
-  ["<space>"] = { LazyVim.pick("files", { root = true }), "Find Files" },
-  ["/"] = { LazyVim.pick("live_grep", { root = true }), "Grep" },
-  s = {
-    name = "+Search",
-    W = { LazyVim.pick("grep_string", { word_match = "-w", root = false }), "Word (cwd)" },
-    w = { LazyVim.pick("grep_string", { word_match = "-w", root = true }), "Word (root dir)" },
-  },
-  ut = { "<cmd>Telescope undo<cr>", "Undotree" },
-  bf = { LazyVim.pick("live_grep", { grep_open_files = true }), "Grep in open buffers" },
-  bl = { "<cmd>BufferLineCloseRight<cr>", "BufferLineCloseRight" },
-  bh = { "<cmd>BufferLineCloseLeft<cr>", "BufferLineCloseLeft" },
-  ["'"] = { "<cmd>Telescope jumplist<cr>", "Jumplist" },
-  j = { "<cmd>Grapple cycle forward<cr>", "Grapple Cycle Forward" },
-  k = { "<cmd>Grapple cycle backward<cr>", "Grapple cycle backward" },
-  a = { "<cmd>Grapple toggle<cr>", "Grapple Toggle" },
-  A = { "<cmd>Grapple reset<cr>", "Clear All Grapple Tags" },
-  m = { "<cmd>Grapple open_tags<cr>", "Grapple Popup Tags" },
-  cp = { "<cmd> let @+ = expand('%:p') <cr>", "Copy Current File Path" },
-  ua = { "<cmd>ToggleAutoComplete<cr>", "Toggle Autocomplete" },
-  cs = { "<cmd>SymbolsOutline<cr>", "Symbols Outline" },
-  uc = { "<cmd>ToggleCopilot<cr>", "Toggle Copilot" },
-  ul = {
+wk.add({
+  { "<leader>'", "<cmd>Telescope jumplist<cr>", desc = "Jumplist" },
+  { "<leader>/", LazyVim.pick("live_grep", { root = true }), desc = "Grep" },
+  { "<leader><space>", LazyVim.pick("files", { root = true }), desc = "Find Files" },
+  { "<leader>A", "<cmd>Grapple reset<cr>", desc = "Clear All Grapple Tags" },
+  { "<leader>a", "<cmd>Grapple toggle<cr>", desc = "Grapple Toggle" },
+  { "<leader>bh", "<cmd>BufferLineCloseLeft<cr>", desc = "BufferLineCloseLeft" },
+  { "<leader>bl", "<cmd>BufferLineCloseRight<cr>", desc = "BufferLineCloseRight" },
+  { "<leader>cp", "<cmd> let @+ = expand('%:p') <cr>", desc = "Copy Current File Path" },
+  { "<leader>cs", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" },
+  { "<leader>j", "<cmd>Grapple cycle forward<cr>", desc = "Grapple Cycle Forward" },
+  { "<leader>k", "<cmd>Grapple cycle backward<cr>", desc = "Grapple cycle backward" },
+  { "<leader>m", "<cmd>Grapple open_tags<cr>", desc = "Grapple Popup Tags" },
+  { "<leader>s", group = "Search" },
+  { "<leader>sW", LazyVim.pick("grep_string", { word_match = "-w", root = false }), desc = "Word (cwd)" },
+  { "<leader>sw", LazyVim.pick("grep_string", { word_match = "-w", root = true }), desc = "Word (root dir)" },
+  { "<leader>ua", "<cmd>ToggleAutoComplete<cr>", desc = "Toggle Autocomplete" },
+  { "<leader>uc", "<cmd>ToggleCopilot<cr>", desc = "Toggle Copilot" },
+  { "<leader>ug", "<cmd>GitBlameToggle<cr>", desc = "Toggle Git Blame" },
+  {
+    "<leader>ul",
     function()
       LazyVim.toggle("relativenumber")
     end,
-    "Toggle Relative Line #",
+    desc = "Toggle Relative Line #",
   },
-  ug = { "<cmd>GitBlameToggle<cr>", "Toggle Git Blame" },
-}, { prefix = "<leader>" })
+  { "<leader>ut", "<cmd>Telescope undo<cr>", desc = "Undotree" },
+})
 
-wk.register({
-  s = {
-    name = "+Search",
-    W = { LazyVim.pick("grep_string", { root = false }), "Selection (cwd)" },
-    w = { LazyVim.pick("grep_string", { root = true }), "Selection (root dir)" },
+wk.add({
+  {
+    mode = { "v" },
+    { "<leader>s", group = "Search" },
+    { "<leader>sW", LazyVim.pick("grep_string", { root = false }), desc = "Selection (cwd)" },
+    { "<leader>sw", LazyVim.pick("grep_string", { root = true }), desc = "Selection (root dir)" },
   },
-}, { prefix = "<leader>", mode = "v" })
+})
 
-wk.register({
-  jj = { "<esc>", "Escape Insert Mode" },
-  ["<C-$>"] = { "<c-o>$", "Move to end of line" },
-  ["<C-0>"] = { "<c-o>0", "Move to beginning of line" },
-}, { mode = "i" })
+wk.add({
+  {
+    mode = { "i" },
+    { "<C-$>", "<c-o>$", desc = "Move to end of line" },
+    { "<C-0>", "<c-o>0", desc = "Move to beginning of line" },
+    { "jj", "<esc>", desc = "Escape Insert Mode" },
+  },
+})
 
---toggleterm
+-- toggleterm
 local t = require("toggleterm.terminal")
 local terminal = t.Terminal
-wk.register({
-  t = {
-    name = "+Terminal",
-    t = { "<cmd>ToggleTerm<cr>", "Toggle Terminal" },
-    j = { "<cmd>ToggleTerm size=15 direction=horizontal<cr>", "Toggle Terminal (horizontal)" },
-    h = { "<cmd>ToggleTerm size=70 direction=vertical<cr>", "Toggle Terminal (vertical)" },
-    f = { "<cmd>ToggleTerm direction=float<cr>", "Toggle Terminal (float)" },
-    n = {
-      function()
-        local current = t.get_all()[1]
-        local new_direction = "horizontal"
-        if current:is_float() then
-          return
-        elseif current:is_tab() then
-          new_direction = "tab"
-        elseif current.direction == "vertical" then
-          new_direction = "vertical"
-        end
-        terminal:new({ direction = new_direction }):toggle()
-      end,
-      "New Terminal",
-    },
+wk.add({
+  { "<leader>t", group = "Terminal" },
+  { "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", desc = "Toggle Terminal (float)" },
+  { "<leader>th", "<cmd>ToggleTerm size=70 direction=vertical<cr>", desc = "Toggle Terminal (vertical)" },
+  { "<leader>tj", "<cmd>ToggleTerm size=15 direction=horizontal<cr>", desc = "Toggle Terminal (horizontal)" },
+  {
+    "<leader>tn",
+    function()
+      local current = t.get_all()[1]
+      local new_direction = "horizontal"
+      if current:is_float() then
+        return
+      elseif current:is_tab() then
+        new_direction = "tab"
+      elseif current.direction == "vertical" then
+        new_direction = "vertical"
+      end
+      terminal:new({ direction = new_direction }):toggle()
+    end,
+    desc = "New Terminal",
   },
-}, { prefix = "<leader>" })
+  { "<leader>tt", "<cmd>ToggleTerm<cr>", desc = "Toggle Terminal" },
+})
