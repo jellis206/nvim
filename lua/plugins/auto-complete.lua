@@ -20,7 +20,8 @@ return {
         end
       end, {})
 
-      local copilot_enabled = true
+      vim.cmd("Copilot disable")
+      local copilot_enabled = false
       vim.api.nvim_create_user_command("ToggleCopilot", function()
         if copilot_enabled then
           vim.cmd("Copilot disable")
