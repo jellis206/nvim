@@ -1,6 +1,7 @@
+vim.keymap.set("n", "x", '"_x')
+
 local wk = require("which-key")
-local keymap = vim.keymap
-keymap.set("n", "x", '"_x')
+local copilot_enabled = false
 
 wk.add({
   { "<leader>'", "<cmd>Telescope jumplist<cr>", desc = "Jumplist" },
@@ -19,7 +20,27 @@ wk.add({
   { "<leader>sW", LazyVim.pick("grep_string", { word_match = "-w", root = false }), desc = "Word (cwd)" },
   { "<leader>sw", LazyVim.pick("grep_string", { word_match = "-w", root = true }), desc = "Word (root dir)" },
   { "<leader>ua", "<cmd>ToggleAutoComplete<cr>", desc = "Toggle Autocomplete" },
-  { "<leader>uc", "<cmd>ToggleCopilot<cr>", desc = "Toggle Copilot" },
+  {
+    "<leader>uc",
+    function()
+      local copilot = require("copilot.command")
+      if copilot_enabled then
+        copilot.disable()
+        copilot_enabled = false
+      else
+        copilot.enable()
+        copilot_enabled = true
+      end
+    end,
+    desc = "Toggle Copilot",
+  },
+  {
+    "<leader>um",
+    function()
+      require("supermaven-nvim.api").toggle()
+    end,
+    desc = "Toggle Supermaven",
+  },
   { "<leader>ug", "<cmd>GitBlameToggle<cr>", desc = "Toggle Git Blame" },
   {
     "<leader>ul",
@@ -46,6 +67,7 @@ wk.add({
     { "<C-$>", "<c-o>$", desc = "Move to end of line" },
     { "<C-0>", "<c-o>0", desc = "Move to beginning of line" },
     { "jj", "<esc>", desc = "Escape Insert Mode" },
+    { "kk", "<esc>", desc = "Escape Insert Mode" },
   },
 })
 
