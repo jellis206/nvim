@@ -9,7 +9,7 @@ return {
         numbers = "none",
         number_style = "superscript",
         mappings = true,
-        buffer_close_icon = "",
+        buffer_close_icon = "",
         modified_icon = "",
         close_icon = "",
         left_trunc_marker = "",

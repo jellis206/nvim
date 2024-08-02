@@ -31,6 +31,9 @@ wk.add({
         copilot.enable()
         copilot_enabled = true
       end
+      vim.defer_fn(function()
+        copilot.status()
+      end, 0)
     end,
     desc = "Toggle Copilot",
   },

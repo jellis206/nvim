@@ -1,9 +1,6 @@
 return {
   {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-emoji",
-    },
+    "nvim-cmp",
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
       local luasnip = require("luasnip")
@@ -17,18 +14,6 @@ return {
         else
           cmp.setup.buffer({ enabled = true })
           cmp_enabled = true
-        end
-      end, {})
-
-      vim.cmd("Copilot disable")
-      local copilot_enabled = false
-      vim.api.nvim_create_user_command("ToggleCopilot", function()
-        if copilot_enabled then
-          vim.cmd("Copilot disable")
-          copilot_enabled = false
-        else
-          vim.cmd("Copilot enable")
-          copilot_enabled = true
         end
       end, {})
 
@@ -98,6 +83,29 @@ return {
           scroll_docs(-4)
         end, { "i", "s" }),
       })
+
+      table.insert(opts.sources, 1, { name = "supermaven", group_index = 1, priority = 100 })
+
+      opts.formatting.format = function(_, item)
+        local icons = LazyVim.config.icons.kinds
+        icons["Supermaven"] = " "
+        if icons[item.kind] then
+          item.kind = icons[item.kind] .. item.kind
+        end
+
+        local widths = {
+          abbr = vim.g.cmp_widths and vim.g.cmp_widths.abbr or 40,
+          menu = vim.g.cmp_widths and vim.g.cmp_widths.menu or 30,
+        }
+
+        for key, width in pairs(widths) do
+          if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
+            item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "…"
+          end
+        end
+
+        return item
+      end
     end,
   },
 }
