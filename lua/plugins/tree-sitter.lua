@@ -5,10 +5,12 @@ return {
       -- ensure these language parsers are installed
       vim.list_extend(opts.ensure_installed, {
         -- Common
+        "typescript",
+        "javascript",
         "html",
         "css",
-        "javascript",
-        "typescript",
+        "go",
+        "templ",
         "c",
         "cpp",
         "json",
@@ -27,14 +29,14 @@ return {
         "regex",
 
         -- Less common
+        "zig",
+        "svelte",
+        "vue",
         "bash",
-        "latex",
+        "sql",
         "lua",
         "markdown",
         "markdown_inline",
-        "vim",
-        "go",
-        "tsx",
         "toml",
         "yaml",
         "dockerfile",
@@ -46,7 +48,8 @@ return {
         "llvm",
         "make",
         "r",
-        "sql",
+        "vim",
+        "latex",
       })
     end,
   },

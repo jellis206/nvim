@@ -2,6 +2,10 @@
 
 return {
   {
+    "williamboman/mason.nvim",
+    opts = { ensure_installed = { "htmx-lsp" } },
+  },
+  {
     "neovim/nvim-lspconfig",
     opts = {
       -- make sure mason installs the server
@@ -40,6 +44,8 @@ return {
           --   })
           -- end,
         },
+        htmx = {},
+        templ = {},
       },
     },
   },

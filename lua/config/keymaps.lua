@@ -1,7 +1,6 @@
-vim.keymap.set("n", "x", '"_x')
-
 local wk = require("which-key")
 local copilot_enabled = false
+local mouse_enabled = true
 
 wk.add({
   { "<leader>'", "<cmd>Telescope jumplist<cr>", desc = "Jumplist" },
@@ -53,6 +52,19 @@ wk.add({
     desc = "Toggle Relative Line #",
   },
   { "<leader>ut", "<cmd>Telescope undo<cr>", desc = "Undotree" },
+  {
+    "<leader>uM",
+    function()
+      if mouse_enabled then
+        vim.opt.mouse = ""
+        mouse_enabled = false
+      else
+        vim.opt.mouse = "a"
+        mouse_enabled = true
+      end
+    end,
+    desc = "Toggle Mouse Mode",
+  },
 })
 
 wk.add({
