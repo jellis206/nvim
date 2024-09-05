@@ -1,4 +1,5 @@
 return {
+  { "ibhagwan/smartyank.nvim" },
   {
     "gbprod/yanky.nvim",
     recommended = true,
