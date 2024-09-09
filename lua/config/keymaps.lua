@@ -1,5 +1,6 @@
 local wk = require("which-key")
 local copilot_enabled = false
+local supermaven_enabled = false
 local mouse_enabled = true
 
 wk.add({
@@ -39,7 +40,13 @@ wk.add({
   {
     "<leader>um",
     function()
-      require("supermaven-nvim.api").toggle()
+      local supermaven = require("supermaven-nvim.api")
+      if supermaven_enabled then
+        supermaven.stop()
+      else
+        supermaven.start()
+      end
+      supermaven_enabled = not supermaven_enabled
     end,
     desc = "Toggle Supermaven",
   },
