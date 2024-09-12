@@ -10,7 +10,7 @@ return {
     -- An alternative way to set your API key
     openai_api_key = os.getenv("OPENAI_API_KEY"),
     -- ChatGPT Model
-    openai_model_id = "gpt-4o-mini",
+    openai_model_id = "gpt-4o",
     -- Send code as well as diagnostics
     context = true,
     -- Set your preferred language for the response
