@@ -1,6 +1,5 @@
 local wk = require("which-key")
-local copilot_enabled = false
-local supermaven_enabled = false
+-- local supermaven_enabled = false
 local mouse_enabled = true
 
 wk.add({
@@ -15,9 +14,10 @@ wk.add({
   { "<leader>cs", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" },
   { "<leader>j", "<cmd>Grapple cycle forward<cr>", desc = "Grapple Cycle Forward" },
   { "<leader>k", "<cmd>Grapple cycle backward<cr>", desc = "Grapple cycle backward" },
-  --{ "<leader>m", "<cmd>Grapple open_tags<cr>", desc = "Grapple Popup Tags" },
-  { "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Preview" },
-  { "<leader>s", group = "Search" },
+  { "<leader>p", group = "popups" },
+  { "<leader>pg", "<cmd>Grapple open_tags<cr>", desc = "Grapple Popup Tags" },
+  { "<leader>pm", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Preview" },
+  { "<leader>s", group = "search" },
   { "<leader>sW", LazyVim.pick("grep_string", { word_match = "-w", root = false }), desc = "Word (cwd)" },
   { "<leader>sw", LazyVim.pick("grep_string", { word_match = "-w", root = true }), desc = "Word (root dir)" },
   { "<leader>ua", "<cmd>ToggleAutoComplete<cr>", desc = "Toggle Autocomplete" },
@@ -25,6 +25,8 @@ wk.add({
     "<leader>uc",
     function()
       local copilot = require("copilot.command")
+      local copilot_enabled = not require("copilot.client").is_disabled()
+
       if copilot_enabled then
         copilot.disable()
         copilot_enabled = false
@@ -38,27 +40,20 @@ wk.add({
     end,
     desc = "Toggle Copilot",
   },
-  {
-    "<leader>um",
-    function()
-      local supermaven = require("supermaven-nvim.api")
-      if supermaven_enabled then
-        supermaven.stop()
-      else
-        supermaven.start()
-      end
-      supermaven_enabled = not supermaven_enabled
-    end,
-    desc = "Toggle Supermaven",
-  },
+  -- {
+  --   "<leader>um",
+  --   function()
+  --     local supermaven = require("supermaven-nvim.api")
+  --     if supermaven_enabled then
+  --       supermaven.stop()
+  --     else
+  --       supermaven.start()
+  --     end
+  --     supermaven_enabled = not supermaven_enabled
+  --   end,
+  --   desc = "Toggle Supermaven",
+  -- },
   { "<leader>ug", "<cmd>GitBlameToggle<cr>", desc = "Toggle Git Blame" },
-  {
-    "<leader>ul",
-    function()
-      LazyVim.toggle("relativenumber")
-    end,
-    desc = "Toggle Relative Line #",
-  },
   { "<leader>ut", "<cmd>Telescope undo<cr>", desc = "Undotree" },
   {
     "<leader>uM",
@@ -74,6 +69,9 @@ wk.add({
     desc = "Toggle Mouse Mode",
   },
 })
+Snacks.toggle
+  .option("mouse", { off = mouse_enabled == false, on = mouse_enabled == true, name = "Mouse" })
+  :map("<leader>uM")
 
 wk.add({
   {

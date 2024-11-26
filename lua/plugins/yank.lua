@@ -1,5 +1,4 @@
 return {
-  { "ibhagwan/smartyank.nvim" },
   {
     "gbprod/yanky.nvim",
     recommended = true,
@@ -10,7 +9,7 @@ return {
     },
     keys = {
       {
-        "<leader>p",
+        "<leader>y",
         function()
           if LazyVim.pick.picker.name == "telescope" then
             require("telescope").extensions.yank_history.yank_history({})

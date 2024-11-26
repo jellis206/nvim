@@ -109,28 +109,28 @@ return {
         end, { "i", "s" }),
       })
 
-      table.insert(opts.sources, 1, { name = "supermaven", group_index = 1, priority = 100 })
+      -- table.insert(opts.sources, 1, { name = "supermaven", group_index = 1, priority = 100 })
 
-      opts.formatting.format = function(_, item)
-        local icons = LazyVim.config.icons.kinds
-        icons["Supermaven"] = " "
-        if icons[item.kind] then
-          item.kind = icons[item.kind] .. item.kind
-        end
+      -- opts.formatting.format = function(_, item)
+      --   local icons = LazyVim.config.icons.kinds
+      --   icons["Supermaven"] = " "
+      --   if icons[item.kind] then
+      --     item.kind = icons[item.kind] .. item.kind
+      --   end
 
-        local widths = {
-          abbr = vim.g.cmp_widths and vim.g.cmp_widths.abbr or 40,
-          menu = vim.g.cmp_widths and vim.g.cmp_widths.menu or 30,
-        }
+      --   local widths = {
+      --     abbr = vim.g.cmp_widths and vim.g.cmp_widths.abbr or 40,
+      --     menu = vim.g.cmp_widths and vim.g.cmp_widths.menu or 30,
+      --   }
 
-        for key, width in pairs(widths) do
-          if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
-            item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "…"
-          end
-        end
+      --   for key, width in pairs(widths) do
+      --     if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
+      --       item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "…"
+      --     end
+      --   end
 
-        return item
-      end
+      --   return item
+      -- end
     end,
   },
 }

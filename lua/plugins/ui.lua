@@ -15,7 +15,13 @@ return {
     "folke/tokyonight.nvim",
     lazy = false,
     priority = 1000,
-    opts = {},
+    opts = {
+      transparent = true,
+      styles = {
+        sidebars = "transparent",
+        floats = "transparent",
+      },
+    },
   },
   {
     "LazyVim/LazyVim",
@@ -24,13 +30,6 @@ return {
     },
   },
   { "nvim-tree/nvim-web-devicons", lazy = true },
-  -- {
-  --   vim.api.nvim_command([[
-  --   augroup ChangeBackgroudColour
-  --       autocmd colorscheme * :hi normal guibg=000000
-  --   augroup END
-  --   ]])
-  -- },
   {
     url = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git",
     name = "rainbow-delimiters",
