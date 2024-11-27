@@ -1,5 +1,4 @@
 local wk = require("which-key")
--- local supermaven_enabled = false
 local mouse_enabled = true
 
 wk.add({
@@ -21,57 +20,38 @@ wk.add({
   { "<leader>sW", LazyVim.pick("grep_string", { word_match = "-w", root = false }), desc = "Word (cwd)" },
   { "<leader>sw", LazyVim.pick("grep_string", { word_match = "-w", root = true }), desc = "Word (root dir)" },
   { "<leader>ua", "<cmd>ToggleAutoComplete<cr>", desc = "Toggle Autocomplete" },
-  {
-    "<leader>uc",
-    function()
-      local copilot = require("copilot.command")
-      local copilot_enabled = not require("copilot.client").is_disabled()
-
-      if copilot_enabled then
-        copilot.disable()
-        copilot_enabled = false
-      else
-        copilot.enable()
-        copilot_enabled = true
-      end
-      vim.schedule(function()
-        copilot.status()
-      end)
-    end,
-    desc = "Toggle Copilot",
-  },
-  -- {
-  --   "<leader>um",
-  --   function()
-  --     local supermaven = require("supermaven-nvim.api")
-  --     if supermaven_enabled then
-  --       supermaven.stop()
-  --     else
-  --       supermaven.start()
-  --     end
-  --     supermaven_enabled = not supermaven_enabled
-  --   end,
-  --   desc = "Toggle Supermaven",
-  -- },
   { "<leader>ug", "<cmd>GitBlameToggle<cr>", desc = "Toggle Git Blame" },
   { "<leader>ut", "<cmd>Telescope undo<cr>", desc = "Undotree" },
-  {
-    "<leader>uM",
-    function()
-      if mouse_enabled then
-        vim.opt.mouse = ""
-        mouse_enabled = false
-      else
-        vim.opt.mouse = "a"
-        mouse_enabled = true
-      end
-    end,
-    desc = "Toggle Mouse Mode",
-  },
 })
 Snacks.toggle
-  .option("mouse", { off = mouse_enabled == false, on = mouse_enabled == true, name = "Mouse" })
+  .new({
+    name = "Mouse",
+    get = function()
+      return mouse_enabled
+    end,
+    set = function(state)
+      vim.opt.mouse = state and "a" or ""
+      mouse_enabled = state
+    end,
+  })
   :map("<leader>uM")
+
+Snacks.toggle
+  .new({
+    name = "Copilot",
+    get = function()
+      return not require("copilot.client").is_disabled()
+    end,
+    set = function(state)
+      local copilot = require("copilot.command")
+      if state then
+        copilot.enable()
+      else
+        copilot.disable()
+      end
+    end,
+  })
+  :map("<leader>uc")
 
 wk.add({
   {
@@ -93,28 +73,27 @@ wk.add({
 })
 
 -- toggleterm
-local t = require("toggleterm.terminal")
-local terminal = t.Terminal
-wk.add({
-  { "<leader>t", group = "Terminal" },
-  { "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", desc = "Toggle Terminal (float)" },
-  { "<leader>th", "<cmd>ToggleTerm size=70 direction=vertical<cr>", desc = "Toggle Terminal (vertical)" },
-  { "<leader>tj", "<cmd>ToggleTerm size=15 direction=horizontal<cr>", desc = "Toggle Terminal (horizontal)" },
-  {
-    "<leader>tn",
-    function()
-      local current = t.get_all()[1]
-      local new_direction = "horizontal"
-      if current:is_float() then
-        return
-      elseif current:is_tab() then
-        new_direction = "tab"
-      elseif current.direction == "vertical" then
-        new_direction = "vertical"
-      end
-      terminal:new({ direction = new_direction }):toggle()
-    end,
-    desc = "New Terminal",
-  },
-  { "<leader>tt", "<cmd>ToggleTerm<cr>", desc = "Toggle Terminal" },
-})
+-- local t = require("toggleterm.terminal")
+-- local terminal = t.Terminal
+-- wk.add({
+--   { "<leader>t", group = "Terminal" },
+--   { "<leader>th", "<cmd>ToggleTerm size=70 direction=vertical<cr>", desc = "Toggle Terminal (vertical)" },
+--   { "<leader>tj", "<cmd>ToggleTerm size=15 direction=horizontal<cr>", desc = "Toggle Terminal (horizontal)" },
+--   {
+--     "<leader>tn",
+--     function()
+--       local current = t.get_all()[1]
+--       local new_direction = "horizontal"
+--       if current:is_float() then
+--         return
+--       elseif current:is_tab() then
+--         new_direction = "tab"
+--       elseif current.direction == "vertical" then
+--         new_direction = "vertical"
+--       end
+--       terminal:new({ direction = new_direction }):toggle()
+--     end,
+--     desc = "New Terminal",
+--   },
+--   { "<leader>tt", "<cmd>ToggleTerm<cr>", desc = "Toggle Terminal" },
+-- })

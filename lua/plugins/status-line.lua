@@ -23,6 +23,35 @@ return {
           lualine_b = { "branch" },
           lualine_c = {
             {
+              function()
+                -- Split the path and get the last 3 parts
+                local function get_last_n_parts(path, n)
+                  local parts = {}
+                  for part in path:gmatch("[^/]+") do
+                    table.insert(parts, part)
+                  end
+                  local start_index = math.max(#parts - n + 1, 1)
+                  local result = {}
+                  for i = start_index, #parts do
+                    table.insert(result, parts[i])
+                  end
+                  return table.concat(result, "/")
+                end
+
+                local path = LazyVim.root()
+                return get_last_n_parts(path, 3)
+              end,
+              -- cond = function()
+              --   -- Check if root_dir's `cond` is false or nil
+              --   local root_cond = LazyVim.lualine.root_dir().cond
+              --   return not (root_cond and root_cond())
+              -- end,
+              icon = "󱉭",
+              color = function()
+                return LazyVim.ui.fg("Special")
+              end,
+            },
+            {
               "diagnostics",
               symbols = {
                 error = icons.diagnostics.Error,
@@ -58,13 +87,6 @@ return {
               end,
             },
             {
-              require("lazy.status").updates,
-              cond = require("lazy.status").has_updates,
-              color = function()
-                return LazyVim.ui.fg("Special")
-              end,
-            },
-            {
               "diff",
               symbols = {
                 added = icons.git.added,
@@ -82,6 +104,24 @@ return {
                 end
               end,
             },
+            -- {
+            --   function()
+            --     local msg = "No Active Lsp"
+            --     local buf_ft = vim.api.nvim_get_option_value("filetype", { buf = 0 })
+            --     local clients = vim.lsp.get_clients()
+            --     if next(clients) == nil then
+            --       return msg
+            --     end
+            --     for _, client in ipairs(clients) do
+            --       local filetypes = client.config.filetypes
+            --       if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+            --         return client.name
+            --       end
+            --     end
+            --     return msg
+            --   end,
+            --   icon = " LSP:",
+            -- },
           },
           lualine_y = {
             { "progress", separator = { left = "" }, padding = { left = 1, right = 1 } },
@@ -120,27 +160,6 @@ return {
           end,
         })
       end
-
-      if vim.g.lsp_statusline then
-        local function lsp_status()
-          local buf_ft = vim.api.nvim_get_option_value("filetype", { buf = 0 })
-          local clients = vim.lsp.get_clients()
-          for _, client in ipairs(clients) do
-            local filetypes = client.config.filetypes
-            if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-              return client.name
-            end
-          end
-          return nil
-        end
-
-        local function has_active_lsp()
-          return lsp_status() ~= nil
-        end
-      end
-      table.insert(opts.sections.lualine_c, {
-        -- Lsp server name .
-      })
 
       return opts
     end,
