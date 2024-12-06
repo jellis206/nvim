@@ -3,6 +3,16 @@ return {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
     opts = function()
+      local function in_git()
+        local handle = io.popen("git rev-parse --git-dir 2>/dev/null")
+        if handle then
+          local result = handle:read("*a")
+          handle:close()
+          return result ~= nil and result ~= ""
+        end
+        return false
+      end
+
       local lualine_require = require("lualine_require")
       lualine_require.require = require
 
@@ -19,7 +29,12 @@ return {
           section_separators = { left = "", right = "" },
         },
         sections = {
-          lualine_a = { { "mode", separator = { left = "" }, right_padding = 2 } },
+          lualine_a = {
+            {
+              "mode",
+              separator = { left = "", right = "" },
+            },
+          },
           lualine_b = { "branch" },
           lualine_c = {
             {
@@ -132,7 +147,7 @@ return {
               function()
                 return " " .. os.date("%R")
               end,
-              separator = { right = "" },
+              separator = { left = "", right = "" },
               left_padding = 2,
             },
           },

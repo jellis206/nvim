@@ -1,5 +1,8 @@
+vim.api.nvim_set_keymap("n", "<S-Enter>", "<C-i>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("i", "<S-Enter>", "<C-i>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "<S-Enter>", "<C-i>", { noremap = true, silent = true })
+
 local wk = require("which-key")
-local mouse_enabled = true
 
 wk.add({
   { "<leader>'", "<cmd>Telescope jumplist<cr>", desc = "Jumplist" },
@@ -19,39 +22,9 @@ wk.add({
   { "<leader>s", group = "search" },
   { "<leader>sW", LazyVim.pick("grep_string", { word_match = "-w", root = false }), desc = "Word (cwd)" },
   { "<leader>sw", LazyVim.pick("grep_string", { word_match = "-w", root = true }), desc = "Word (root dir)" },
-  { "<leader>ua", "<cmd>ToggleAutoComplete<cr>", desc = "Toggle Autocomplete" },
   { "<leader>ug", "<cmd>GitBlameToggle<cr>", desc = "Toggle Git Blame" },
   { "<leader>ut", "<cmd>Telescope undo<cr>", desc = "Undotree" },
 })
-Snacks.toggle
-  .new({
-    name = "Mouse",
-    get = function()
-      return mouse_enabled
-    end,
-    set = function(state)
-      vim.opt.mouse = state and "a" or ""
-      mouse_enabled = state
-    end,
-  })
-  :map("<leader>uM")
-
-Snacks.toggle
-  .new({
-    name = "Copilot",
-    get = function()
-      return not require("copilot.client").is_disabled()
-    end,
-    set = function(state)
-      local copilot = require("copilot.command")
-      if state then
-        copilot.enable()
-      else
-        copilot.disable()
-      end
-    end,
-  })
-  :map("<leader>uc")
 
 wk.add({
   {
@@ -72,28 +45,61 @@ wk.add({
   },
 })
 
--- toggleterm
--- local t = require("toggleterm.terminal")
--- local terminal = t.Terminal
--- wk.add({
---   { "<leader>t", group = "Terminal" },
---   { "<leader>th", "<cmd>ToggleTerm size=70 direction=vertical<cr>", desc = "Toggle Terminal (vertical)" },
---   { "<leader>tj", "<cmd>ToggleTerm size=15 direction=horizontal<cr>", desc = "Toggle Terminal (horizontal)" },
---   {
---     "<leader>tn",
---     function()
---       local current = t.get_all()[1]
---       local new_direction = "horizontal"
---       if current:is_float() then
---         return
---       elseif current:is_tab() then
---         new_direction = "tab"
---       elseif current.direction == "vertical" then
---         new_direction = "vertical"
---       end
---       terminal:new({ direction = new_direction }):toggle()
---     end,
---     desc = "New Terminal",
---   },
---   { "<leader>tt", "<cmd>ToggleTerm<cr>", desc = "Toggle Terminal" },
--- })
+local auto_cmp_enabled = true
+Snacks.toggle
+  .new({
+    name = "Auto Complete",
+    get = function()
+      return auto_cmp_enabled
+    end,
+    set = function(state)
+      auto_cmp_enabled = state
+      vim.cmd("ToggleAutoComplete")
+    end,
+  })
+  :map("<leader>ua")
+
+Snacks.toggle
+  .new({
+    name = "Copilot",
+    get = function()
+      return not require("copilot.client").is_disabled()
+    end,
+    set = function(state)
+      local copilot = require("copilot.command")
+      if state then
+        copilot.enable()
+      else
+        copilot.disable()
+      end
+    end,
+  })
+  :map("<leader>uc")
+
+local gb_enabled = true
+Snacks.toggle
+  .new({
+    name = "Git Blame",
+    get = function()
+      return gb_enabled
+    end,
+    set = function(state)
+      gb_enabled = state
+      vim.cmd("GitBlameToggle")
+    end,
+  })
+  :map("<leader>ug")
+
+local mouse_enabled = true
+Snacks.toggle
+  .new({
+    name = "Mouse",
+    get = function()
+      return mouse_enabled
+    end,
+    set = function(state)
+      vim.opt.mouse = state and "a" or ""
+      mouse_enabled = state
+    end,
+  })
+  :map("<leader>uM")
