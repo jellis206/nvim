@@ -4,7 +4,7 @@ return {
     opts = {
       options = {
         themable = true,
-        -- separator_style = "slope",
+        separator_style = { "/", "/" },
         indicator = "underline",
         numbers = "none",
         number_style = "superscript",

@@ -1,18 +1,16 @@
+local function get_default_colors()
+  return { bg = "#1a1b26", fg = "#ffffff" }
+end
+
+local function get_colors(color)
+  return { fg = Snacks.util.color(color) }
+end
+
 return {
   {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
     opts = function()
-      local function in_git()
-        local handle = io.popen("git rev-parse --git-dir 2>/dev/null")
-        if handle then
-          local result = handle:read("*a")
-          handle:close()
-          return result ~= nil and result ~= ""
-        end
-        return false
-      end
-
       local lualine_require = require("lualine_require")
       lualine_require.require = require
 
@@ -52,18 +50,12 @@ return {
                   end
                   return table.concat(result, "/")
                 end
-
                 local path = LazyVim.root()
                 return get_last_n_parts(path, 3)
               end,
-              -- cond = function()
-              --   -- Check if root_dir's `cond` is false or nil
-              --   local root_cond = LazyVim.lualine.root_dir().cond
-              --   return not (root_cond and root_cond())
-              -- end,
               icon = "󱉭",
               color = function()
-                return LazyVim.ui.fg("Special")
+                return get_colors("Special")
               end,
             },
             {
@@ -75,8 +67,14 @@ return {
                 hint = icons.diagnostics.Hint,
               },
             },
-            { "filetype", icon_only = true, padding = { left = 1, right = 0 } },
-            { LazyVim.lualine.pretty_path({ relative = "cwd" }) },
+            {
+              "filetype",
+              icon_only = true,
+              padding = { left = 1, right = 0 },
+            },
+            {
+              LazyVim.lualine.pretty_path({ relative = "cwd" }),
+            },
           },
           lualine_x = {
             {
@@ -87,7 +85,7 @@ return {
                 return package.loaded["noice"] and require("noice").api.status.command.has()
               end,
               color = function()
-                return LazyVim.ui.fg("Statement")
+                return get_colors("Statement")
               end,
             },
             {
@@ -98,7 +96,7 @@ return {
                 return package.loaded["dap"] and require("dap").status() ~= ""
               end,
               color = function()
-                return LazyVim.ui.fg("Debug")
+                return get_colors("Debug")
               end,
             },
             {
@@ -171,7 +169,7 @@ return {
             return vim.b.trouble_lualine ~= false and symbols.has()
           end,
           color = function()
-            return LazyVim.ui.fg("Error")
+            return get_colors("Error")
           end,
         })
       end

@@ -1,9 +1,16 @@
 {
   "extras": [
-
+    "lazyvim.plugins.extras.coding.nvim-cmp",
+    "lazyvim.plugins.extras.coding.yanky",
+    "lazyvim.plugins.extras.editor.dial",
+    "lazyvim.plugins.extras.editor.inc-rename",
+    "lazyvim.plugins.extras.lang.angular",
+    "lazyvim.plugins.extras.lang.toml",
+    "lazyvim.plugins.extras.test.core",
+    "lazyvim.plugins.extras.util.dot"
   ],
   "news": {
-    "NEWS.md": "7429"
+    "NEWS.md": "10960"
   },
   "version": 7
 }

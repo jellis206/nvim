@@ -1,13 +1,3 @@
--- Basic keymaps
-local function map(mode, lhs, rhs, opts)
-  vim.api.nvim_set_keymap(mode, lhs, rhs, opts or { noremap = true, silent = true })
-end
-
--- Shift+Enter mappings
-map("n", "<S-Enter>", "<C-i>")
-map("i", "<S-Enter>", "<C-i>")
-map("v", "<S-Enter>", "<C-i>")
-
 local wk = require("which-key")
 
 -- Normal mode mappings
@@ -35,8 +25,14 @@ wk.add({
   -- Utility commands
   { "<leader>A", group = "avante" },
   { "<leader>cp", "<cmd>let @+ = expand('%:p')<cr>", desc = "Copy Current File Path" },
-  { "<leader>cs", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" },
   { "<leader>p", group = "popups" },
+  {
+    "<leader>pd",
+    function()
+      Snacks.dashboard()
+    end,
+    desc = "Show Dashboard",
+  },
   { "<leader>pm", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Preview" },
   { "<leader>ut", "<cmd>Telescope undo<cr>", desc = "Undotree" },
 })

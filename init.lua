@@ -12,3 +12,17 @@ end
 
 -- Create a command to call the function
 vim.api.nvim_create_user_command("ClearRegisters", clear_registers, {})
+
+-- Enable termguicolors for true color support
+if vim.fn.has("termguicolors") == 1 then
+  vim.opt.termguicolors = true
+end
+
+-- Prevent ^[[27u from being interpreted as 7u in Neovim
+-- Remap the ESC key to the actual ESC key in the command mode
+vim.cmd([[
+  cnoremap <Esc> <Esc>
+]])
+
+-- Make block cursor blink
+vim.opt.guicursor = "n-v-c:block-blinkwait175-blinkoff150-blinkon175,i-ci-ve:ver25-blinkwait175-blinkoff150-blinkon175"
