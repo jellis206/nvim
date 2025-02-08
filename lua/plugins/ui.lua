@@ -12,7 +12,7 @@ return {
   --  priority = 1000,
   --},
   {
-    "jellis206/tokyonight.nvim",
+    "folke/tokyonight.nvim",
     lazy = false,
     priority = 1000,
     opts = {

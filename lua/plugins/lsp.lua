@@ -24,6 +24,7 @@ return {
         },
         htmx = {},
         templ = {},
+        dartls = {},
       },
     },
   },
