@@ -26,3 +26,9 @@ vim.cmd([[
 
 -- Make block cursor blink
 vim.opt.guicursor = "n-v-c:block-blinkwait175-blinkoff150-blinkon175,i-ci-ve:ver25-blinkwait175-blinkoff150-blinkon175"
+
+-- Make sure the correct python interpreter is used
+vim.g.python3_host_prog = "/Users/jellis/.asdf/installs/python/3.12.8/bin/python3"
+
+-- I don't use perl so...
+vim.g.loaded_perl_provider = 0

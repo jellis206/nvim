@@ -50,6 +50,8 @@ return {
         "r",
         "vim",
         "latex",
+        "norg",
+        "typst",
       })
     end,
   },
