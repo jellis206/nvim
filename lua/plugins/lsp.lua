@@ -12,7 +12,6 @@ return {
         "cpplint",
         "cpptools",
         "js-debug-adapter",
-        "node-debug2-adapter",
         "debugpy",
         "prettierd",
         "reorder-python-imports",
