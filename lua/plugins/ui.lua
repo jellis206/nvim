@@ -30,7 +30,6 @@ return {
   },
   { "nvim-tree/nvim-web-devicons", lazy = true },
   {
-    url = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim.git",
-    name = "rainbow-delimiters",
+    "HiPhish/rainbow-delimiters.nvim",
   },
 }
