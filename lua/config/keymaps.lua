@@ -31,7 +31,6 @@ wk.add({
     desc = "Show Dashboard",
   },
   { "<leader>pm", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Preview" },
-  { "<leader>ut", "<cmd>Telescope undo<cr>", desc = "Undotree" },
 })
 
 -- Insert mode mappings
