@@ -1,51 +1,62 @@
 return {
   "piersolenski/wtf.nvim",
   dependencies = {
+    "nvim-lua/plenary.nvim",
     "MunifTanjim/nui.nvim",
-    "nvim-lualine/lualine.nvim", -- Add lualine as a dependency
+    -- Optional: For WtfGrepHistory (pick one)
+    -- "nvim-telescope/telescope.nvim",
+    "folke/snacks.nvim",
+    -- "ibhagwan/fzf-lua",
   },
-  opts = {
-    -- Default AI popup type
-    popup_type = "popup",
-    -- An alternative way to set your API key
-    openai_api_key = os.getenv("OPENAI_API_KEY"),
-    -- ChatGPT Model
-    openai_model_id = "gpt-4o",
-    -- Send code as well as diagnostics
-    context = true,
-    -- Set your preferred language for the response
-    language = "english",
-    -- Any additional instructions
-    additional_instructions = nil,
-    -- Default search engine, can be overridden by passing an option to WtfSearch
-    search_engine = "google",
-    -- Add custom colours
-    winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
-  },
+  opts = {},
   keys = {
     {
-      "<leader>cw",
+      "<leader>wfd",
       mode = { "n", "x" },
       function()
-        require("wtf").ai()
+        require("wtf").diagnose()
       end,
       desc = "Debug diagnostic with AI",
     },
     {
+      "<leader>wtf",
+      mode = { "n", "x" },
+      function()
+        require("wtf").fix()
+      end,
+      desc = "Fix diagnostic with AI",
+    },
+    {
       mode = { "n" },
-      "<leader>cW",
+      "<leader>wfs",
       function()
         require("wtf").search()
       end,
       desc = "Search diagnostic with Google",
     },
+    {
+      mode = { "n" },
+      "<leader>wfp",
+      function()
+        require("wtf").pick_provider()
+      end,
+      desc = "Pick provider",
+    },
+    {
+      mode = { "n" },
+      "<leader>wfh",
+      function()
+        require("wtf").history()
+      end,
+      desc = "Populate the quickfix list with previous chat history",
+    },
+    {
+      mode = { "n" },
+      "<leader>wfg",
+      function()
+        require("wtf").grep_history()
+      end,
+      desc = "Grep previous chat history with Telescope",
+    },
   },
-  config = function()
-    local wtf = require("wtf")
-    require("lualine").setup({
-      sections = {
-        lualine_x = { wtf.get_status },
-      },
-    })
-  end,
 }

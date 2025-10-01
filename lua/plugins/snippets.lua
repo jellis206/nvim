@@ -11,8 +11,8 @@ return {
       "rafamadriz/friendly-snippets",
       config = function()
         local ls = require("luasnip")
-        ls.filetype_extend("html", { "html", "angular" })
-        ls.filetype_extend("typescript", { "angular", "typescript", "tsdoc" })
+        ls.filetype_extend("html", { "html" })
+        ls.filetype_extend("typescript", { "typescript", "tsdoc" })
         ls.filetype_extend("sass", { "sass" })
         ls.filetype_extend("scss", { "scss" })
         ls.filetype_extend("css", { "css" })
