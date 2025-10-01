@@ -14,7 +14,6 @@ return {
         "c",
         "cpp",
         "json",
-        "java",
         "python",
         "rust",
 

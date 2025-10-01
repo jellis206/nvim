@@ -30,8 +30,8 @@ vim.opt.guicursor = "n-v-c:block-blinkwait175-blinkoff150-blinkon175,i-ci-ve:ver
 -- Make sure the correct python interpreter is used
 vim.g.python3_host_prog = vim.fn.expand("~/.asdf/shims/python3")
 
--- I don't use perl so...
+-- I don't use these
 vim.g.loaded_perl_provider = 0
-
--- I don't use ruby anymore
 vim.g.loaded_ruby_provider = 0
+vim.g.loaded_java_provider = 0
+vim.g.loaded_julia_provider = 0
