@@ -11,17 +11,14 @@ wk.add({
   { "<leader>bh", "<cmd>BufferLineCloseLeft<cr>", desc = "Close Left Buffers" },
   { "<leader>bl", "<cmd>BufferLineCloseRight<cr>", desc = "Close Right Buffers" },
 
-  -- Grapple
-  { "<leader>a", group = "Grapple" },
-  { "<leader>aA", "<cmd>Grapple reset<cr>", desc = "Clear All Grapple Tags" },
-  { "<leader>aa", "<cmd>Grapple toggle<cr>", desc = "Grapple Toggle" },
-  { "<leader>j", "<cmd>Grapple cycle forward<cr>", desc = "Grapple Cycle Forward" },
-  { "<leader>k", "<cmd>Grapple cycle backward<cr>", desc = "Grapple cycle backward" },
-  { "<leader>pg", "<cmd>Grapple open_tags<cr>", desc = "Grapple Popup Tags" },
+  -- Harpoon
+  { "<leader>h", group = "+harpoon" },
 
   -- Utility commands
-  { "<leader>A", group = "avante" },
-  { "<leader>cp", "<cmd>let @+ = expand('%:p')<cr>", desc = "Copy Current File Path" },
+  { "<leader>cp", "<cmd>let @+ = expand('%:p')<cr>", desc = "Copy File Path" },
+  { "<leader>cn", "<cmd>let @+ = expand('%:t')<cr>", desc = "Copy File Name" },
+
+  -- Popups
   { "<leader>p", group = "popups" },
   {
     "<leader>pd",
