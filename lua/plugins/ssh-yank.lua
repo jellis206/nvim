@@ -41,7 +41,5 @@ return {
         end
       end,
     })
-
-    vim.notify("Dual clipboard sync enabled (OSC52 + xclip)", vim.log.levels.INFO)
   end,
 }
