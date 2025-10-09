@@ -10,8 +10,6 @@ return {
   "ojroques/nvim-osc52",
   event = "VeryLazy",
   config = function()
-    local osc52 = require("osc52")
-
     -- Use system clipboard for regular yanks inside VM
     vim.opt.clipboard = "unnamedplus"
 
@@ -24,13 +22,14 @@ return {
       end
 
       -- 1. Copy to Mac clipboard via OSC52
-      osc52.copy_register(reg)
+      require("osc52").copy_register(reg)
 
-      -- 2. Copy to VM clipboard via xclip (runs async)
-      vim.fn.jobstart({ "xclip", "-selection", "clipboard" }, {
-        stdin = contents,
-        detach = true,
-      })
+      -- 2. Copy to VM clipboard via xclip (properly writing to stdin)
+      local job_id = vim.fn.jobstart({ "xclip", "-selection", "clipboard" }, { detach = true, rpc = false })
+      if job_id > 0 then
+        vim.fn.chansend(job_id, contents)
+        vim.fn.chanclose(job_id, "stdin")
+      end
     end
 
     -- Automatically run after every yank
