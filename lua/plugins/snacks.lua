@@ -161,7 +161,7 @@ return {
       image = {},
       indent = { enabled = true },
       input = { enabled = true },
-      notifier = { enabled = true },
+      notifier = { enabled = false },
       scope = { enabled = true },
       scroll = { enabled = true },
       statuscolumn = { enabled = false }, -- we set this in options.lua
