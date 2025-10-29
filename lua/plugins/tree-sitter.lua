@@ -1,6 +1,7 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
     opts = function(_, opts)
       -- ensure these language parsers are installed
       vim.list_extend(opts.ensure_installed, {
@@ -51,6 +52,21 @@ return {
         "latex",
         "typst",
       })
+      -- Ensure we actually enable highlight/indent (in case opts was empty)
+      opts.highlight = opts.highlight or { enable = true }
+      opts.indent = opts.indent or { enable = true }
+
+      -- Enable matchup integration (this is what gives you `%` for Python blocks)
+      opts.matchup = { enable = true }
+    end,
+  },
+  {
+    "andymass/vim-matchup",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    event = "VeryLazy",
+    config = function()
+      -- Show popup when match is offscreen
+      vim.g.matchup_matchparen_offscreen = { method = "popup" }
     end,
   },
 }
