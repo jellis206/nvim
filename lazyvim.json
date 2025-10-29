@@ -1,8 +1,6 @@
 {
   "extras": [
-    "lazyvim.plugins.extras.ai.copilot-native",
-    "lazyvim.plugins.extras.ai.sidekick",
-    "lazyvim.plugins.extras.ai.supermaven",
+    "lazyvim.plugins.extras.ai.copilot",
     "lazyvim.plugins.extras.coding.luasnip",
     "lazyvim.plugins.extras.coding.mini-comment",
     "lazyvim.plugins.extras.coding.nvim-cmp",
@@ -19,7 +17,8 @@
     "lazyvim.plugins.extras.lang.toml",
     "lazyvim.plugins.extras.test.core",
     "lazyvim.plugins.extras.ui.smear-cursor",
-    "lazyvim.plugins.extras.util.dot"
+    "lazyvim.plugins.extras.util.dot",
+    "lazyvim.plugins.extras.util.mini-hipatterns"
   ],
   "install_version": 7,
   "news": {
