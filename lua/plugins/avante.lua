@@ -18,6 +18,22 @@ return {
     version = false, -- set this if you want to always pull the latest change
 
     opts = {
+      -- Set Claude as the default provider
+      provider = "claude",
+
+      -- Configure providers
+      providers = {
+        claude = {
+          endpoint = "https://api.anthropic.com",
+          model = "claude-haiku-4-5-20251001", -- Claude Haiku 3.5
+          timeout = 30000, -- Timeout in milliseconds
+          extra_request_body = {
+            temperature = 0.7,
+            max_tokens = 4096,
+          },
+        },
+      },
+
       mappings = {
         -- Core
         show_sidebar = "<leader>Aa",
