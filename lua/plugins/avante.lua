@@ -36,59 +36,59 @@ return {
 
       mappings = {
         -- Core
-        show_sidebar = "<leader>Aa",
+        show_sidebar = "<leader>aa",
         toggle = {
-          default = "<leader>At",
-          debug = "<leader>Ad",
-          hint = "<leader>Ah",
-          suggestion = "<leader>As",
-          repomap = "<leader>AR",
+          default = "<leader>at",
+          debug = "<leader>ad",
+          hint = "<leader>ah",
+          suggestion = "<leader>as",
+          repomap = "<leader>aR",
         },
-        refresh = "<leader>Ar",
-        focus = "<leader>Af",
+        refresh = "<leader>ar",
+        focus = "<leader>af",
 
         -- Suggestion
-        select_model = "<leader>A?",
-        ask = "<leader>An",
-        edit = "<leader>Ae",
-        stop_request = "<leader>AS",
-        select_histories = "<leader>Ah",
+        select_model = "<leader>a?",
+        ask = "<leader>an",
+        edit = "<leader>ae",
+        stop_request = "<leader>aS",
+        select_histories = "<leader>ah",
 
         -- Files
         files = {
-          add_current = "<leader>Ac",
-          add_all = "<leader>Ab",
+          add_current = "<leader>ac",
+          add_all = "<leader>ab",
         },
       },
     },
 
     keys = {
-      { "<leader>A", "", desc = "+avante", mode = { "n", "v" } },
+      { "<leader>a", "", desc = "+avante", mode = { "n", "v" } },
 
       -- Sidebar
       {
-        "<leader>Aa",
+        "<leader>aa",
         function()
           require("avante").show_sidebar()
         end,
         desc = "Show Sidebar",
       },
       {
-        "<leader>At",
+        "<leader>at",
         function()
           require("avante").toggle()
         end,
         desc = "Toggle Sidebar",
       },
       {
-        "<leader>Ar",
+        "<leader>ar",
         function()
           require("avante").refresh()
         end,
         desc = "Refresh Sidebar",
       },
       {
-        "<leader>Af",
+        "<leader>af",
         function()
           require("avante").focus()
         end,
@@ -97,28 +97,28 @@ return {
 
       -- Toggles
       {
-        "<leader>Ad",
+        "<leader>ad",
         function()
           require("avante").toggle("debug")
         end,
         desc = "Toggle Debug",
       },
       {
-        "<leader>Ah",
+        "<leader>ah",
         function()
           require("avante").toggle("hint")
         end,
         desc = "Toggle Hint",
       },
       {
-        "<leader>As",
+        "<leader>as",
         function()
           require("avante").toggle("suggestion")
         end,
         desc = "Toggle Suggestions",
       },
       {
-        "<leader>AR",
+        "<leader>aR",
         function()
           require("avante").toggle("repomap")
         end,
@@ -127,35 +127,35 @@ return {
 
       -- Suggestions
       {
-        "<leader>A?",
+        "<leader>a?",
         function()
           require("avante").select_model()
         end,
         desc = "Select Model",
       },
       {
-        "<leader>An",
+        "<leader>an",
         function()
           require("avante").ask()
         end,
         desc = "New Ask",
       },
       {
-        "<leader>Ae",
+        "<leader>ae",
         function()
           require("avante").edit()
         end,
         desc = "Edit Selection",
       },
       {
-        "<leader>AS",
+        "<leader>aS",
         function()
           require("avante").stop_request()
         end,
         desc = "Stop Request",
       },
       {
-        "<leader>Ah",
+        "<leader>ah",
         function()
           require("avante").select_histories()
         end,
@@ -164,14 +164,14 @@ return {
 
       -- Files
       {
-        "<leader>Ac",
+        "<leader>ac",
         function()
           require("avante").add_current_file()
         end,
         desc = "Add Current File",
       },
       {
-        "<leader>Ab",
+        "<leader>ab",
         function()
           require("avante").add_all_buffers()
         end,
