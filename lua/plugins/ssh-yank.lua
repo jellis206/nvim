@@ -3,42 +3,48 @@ local is_ssh = os.getenv("SSH_CONNECTION") ~= nil
 local is_linux = vim.loop.os_uname().sysname == "Linux"
 
 if not (is_ssh and is_linux) then
-  return {}
+    return {}
 end
 
 return {
-  "ojroques/nvim-osc52",
-  event = "VeryLazy",
-  config = function()
-    -- Use system clipboard for regular yanks inside VM
-    vim.opt.clipboard = "unnamedplus"
+    "ojroques/nvim-osc52",
+    event = "VeryLazy",
+    config = function()
+        require("osc52").setup({
+            tmux_passthrough = true,
+        })
+        -- Use system clipboard for regular yanks inside VM
+        vim.opt.clipboard = "unnamedplus"
 
-    -- Helper: copy text to both OSC52 (Mac) and VM clipboard (xclip)
-    local function dual_copy(register)
-      local reg = register == "" and '"' or register
-      local ok, contents = pcall(vim.fn.getreg, reg)
-      if not ok or contents == "" then
-        return
-      end
+        -- Helper: copy text to both OSC52 (Mac) and VM clipboard (xclip)
+        local function dual_copy(register)
+            local reg = register == "" and '"' or register
+            local ok, contents = pcall(vim.fn.getreg, reg)
+            if not ok or contents == "" then
+                return
+            end
 
-      -- 1. Copy to Mac clipboard via OSC52
-      require("osc52").copy_register(reg)
+            -- 1. Copy to Mac clipboard via OSC52
+            require("osc52").copy_register(reg)
 
-      -- 2. Copy to VM clipboard via xclip (properly writing to stdin)
-      local job_id = vim.fn.jobstart({ "xclip", "-selection", "clipboard" }, { detach = true, rpc = false })
-      if job_id > 0 then
-        vim.fn.chansend(job_id, contents)
-        vim.fn.chanclose(job_id, "stdin")
-      end
-    end
-
-    -- Automatically run after every yank
-    vim.api.nvim_create_autocmd("TextYankPost", {
-      callback = function()
-        if vim.v.event.operator == "y" then
-          dual_copy(vim.v.event.regname)
+            -- 2. Copy to VM clipboard via xclip (properly writing to stdin)
+            local job_id = vim.fn.jobstart(
+                { "xclip", "-selection", "clipboard" },
+                { detach = true, rpc = false }
+            )
+            if job_id > 0 then
+                vim.fn.chansend(job_id, contents)
+                vim.fn.chanclose(job_id, "stdin")
+            end
         end
-      end,
-    })
-  end,
+
+        -- Automatically run after every yank
+        vim.api.nvim_create_autocmd("TextYankPost", {
+            callback = function()
+                if vim.v.event.operator == "y" then
+                    dual_copy(vim.v.event.regname)
+                end
+            end,
+        })
+    end,
 }
