@@ -1,16 +1,85 @@
+local plugin_dir = vim.fn.stdpath("data") .. "/lazy/markdown-preview.nvim"
+local app_dir = plugin_dir .. "/app"
+
+local function has_binary()
+    return vim.fn.glob(app_dir .. "/bin/markdown-preview-*") ~= ""
+end
+
+local function has_node_modules()
+    return vim.fn.isdirectory(app_dir .. "/node_modules") == 1
+end
+
+local function runnable()
+    return has_binary() or has_node_modules()
+end
+
+-- Sync install: used by lazy's `build` hook (lazy shows its own progress UI).
+local function install_sync()
+    vim.fn.system({ "bash", app_dir .. "/install.sh" })
+    if has_binary() then
+        return true
+    end
+    -- No pre-built binary for this arch (e.g. Linux aarch64). Fall back to
+    -- populating node_modules; plugin's rpc.vim runs `node app/index.js` then.
+    vim.fn.system({ "npm", "install", "--prefix", app_dir, "--no-audit", "--no-fund", "--loglevel=error" })
+    return runnable()
+end
+
+-- Async install: used at plugin load when something's missing, so nvim doesn't block.
+local function install_async()
+    vim.notify("markdown-preview: installing (one-time)...", vim.log.levels.INFO)
+    vim.fn.jobstart({ "bash", app_dir .. "/install.sh" }, {
+        on_exit = function(_, code)
+            if code == 0 and has_binary() then
+                vim.notify("markdown-preview: ready", vim.log.levels.INFO)
+                return
+            end
+            vim.fn.jobstart(
+                { "npm", "install", "--prefix", app_dir, "--no-audit", "--no-fund", "--loglevel=error" },
+                {
+                    on_exit = function(_, npm_code)
+                        if npm_code == 0 and runnable() then
+                            vim.notify("markdown-preview: ready", vim.log.levels.INFO)
+                        else
+                            vim.notify(
+                                "markdown-preview: install failed (npm exit " .. npm_code .. ")",
+                                vim.log.levels.ERROR
+                            )
+                        end
+                    end,
+                }
+            )
+        end,
+    })
+end
+
 return {
     {
         "iamcco/markdown-preview.nvim",
         cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+        ft = "markdown",
         build = function()
-            require("lazy").load({ plugins = { "markdown-preview.nvim" } })
-            vim.fn["mkdp#util#install"]()
+            install_sync()
         end,
         keys = {
             {
                 "<leader>pm",
                 ft = "markdown",
                 function()
+                    if not runnable() then
+                        vim.notify(
+                            "markdown-preview: still installing, try again in a moment",
+                            vim.log.levels.WARN
+                        )
+                        return
+                    end
+                    -- mkdp tracks open state per buffer in b:MarkdownPreviewToggleBool (0 or 1).
+                    -- NB: 0 is truthy in Lua, so compare explicitly.
+                    if vim.b.MarkdownPreviewToggleBool == 1 then
+                        vim.cmd("MarkdownPreviewToggle")
+                        vim.notify("Markdown preview stopped", vim.log.levels.INFO, { title = "MarkdownPreview" })
+                        return
+                    end
                     local port_start = 8765
                     local port_count = 8
                     local function port_free(p)
@@ -49,7 +118,23 @@ return {
             vim.g.mkdp_auto_start = 0
             vim.g.mkdp_auto_close = 1
             vim.g.mkdp_open_to_the_world = 0
-            vim.g.mkdp_browser = "true" -- /bin/true: no-op, headless VM has no browser
+            -- mkdp tries to auto-launch a browser; suppress it when there's
+            -- nowhere sensible for the browser to appear. SSH sessions count as
+            -- headless even on macOS (open(1) over SSH would target whoever's
+            -- logged into the console, not us).
+            local in_ssh = vim.env.SSH_CONNECTION ~= nil or vim.env.SSH_TTY ~= nil
+            local has_local_gui = not in_ssh
+                and (
+                    vim.fn.has("mac") == 1
+                    or vim.env.DISPLAY ~= nil
+                    or vim.env.WAYLAND_DISPLAY ~= nil
+                )
+            if not has_local_gui then
+                vim.g.mkdp_browser = "true"
+            end
+            if not runnable() then
+                install_async()
+            end
             vim.cmd([[do FileType]])
         end,
     },
