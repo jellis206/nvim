@@ -38,8 +38,9 @@ return {
                         return
                     end
                     vim.g.mkdp_port = tostring(chosen)
-                    vim.notify(("Markdown preview on http://localhost:%d"):format(chosen))
+                    local url = ("http://localhost:%d/page/%d"):format(chosen, vim.fn.bufnr("%"))
                     vim.cmd("MarkdownPreviewToggle")
+                    vim.notify("Markdown preview: " .. url, vim.log.levels.INFO, { title = "MarkdownPreview" })
                 end,
                 desc = "Markdown Preview",
             },
