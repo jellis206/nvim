@@ -76,42 +76,58 @@ return {
                     -- mkdp tracks open state per buffer in b:MarkdownPreviewToggleBool (0 or 1).
                     -- NB: 0 is truthy in Lua, so compare explicitly.
                     if vim.b.MarkdownPreviewToggleBool == 1 then
-                        vim.cmd("MarkdownPreviewToggle")
+                        -- Close only THIS buffer's page (async rpcnotify), leaving the
+                        -- shared server and any other open previews alone. The stock
+                        -- toggle/stop tears down the whole server via a blocking rpcrequest.
+                        vim.fn["mkdp#rpc#preview_close"]()
                         vim.notify("Markdown preview stopped", vim.log.levels.INFO, { title = "MarkdownPreview" })
                         return
                     end
-                    local port_start = 8765
-                    local port_count = 8
-                    local function port_free(p)
-                        local sock = vim.uv.new_tcp()
-                        local ok = sock:bind("127.0.0.1", p)
-                        sock:close()
-                        return ok ~= nil
-                    end
-                    local chosen
-                    for p = port_start, port_start + port_count - 1 do
-                        if port_free(p) then
-                            chosen = p
-                            break
+                    -- mkdp runs ONE shared server for the whole nvim session; every buffer
+                    -- is served on the same port at /page/<bufnr>. Only pick a port when no
+                    -- server is up yet — otherwise reuse the running one (changing
+                    -- g:mkdp_port mid-session is ignored and corrupts mkdp's state).
+                    local server_up = vim.fn["mkdp#rpc#get_server_status"]() == 1
+                    if not server_up then
+                        local port_start = 8765
+                        local port_count = 8
+                        local function port_free(p)
+                            local sock = vim.uv.new_tcp()
+                            local ok = sock:bind("127.0.0.1", p)
+                            sock:close()
+                            return ok ~= nil
                         end
+                        local chosen
+                        for p = port_start, port_start + port_count - 1 do
+                            if port_free(p) then
+                                chosen = p
+                                break
+                            end
+                        end
+                        if not chosen then
+                            vim.notify(
+                                ("All %d markdown-preview ports (%d-%d) are busy"):format(
+                                    port_count,
+                                    port_start,
+                                    port_start + port_count - 1
+                                ),
+                                vim.log.levels.ERROR
+                            )
+                            return
+                        end
+                        vim.g.mkdp_port = tostring(chosen)
                     end
-                    if not chosen then
-                        vim.notify(
-                            ("All %d markdown-preview ports (%d-%d) are busy"):format(
-                                port_count,
-                                port_start,
-                                port_start + port_count - 1
-                            ),
-                            vim.log.levels.ERROR
-                        )
-                        return
-                    end
-                    vim.g.mkdp_port = tostring(chosen)
-                    local url = ("http://localhost:%d/page/%d"):format(chosen, vim.fn.bufnr("%"))
                     vim.cmd("MarkdownPreviewToggle")
+                    local url = ("http://localhost:%s/page/%d"):format(vim.g.mkdp_port, vim.fn.bufnr("%"))
                     vim.notify("Markdown preview: " .. url, vim.log.levels.INFO, { title = "MarkdownPreview" })
                 end,
                 desc = "Markdown Preview",
+            },
+            {
+                "<leader>pk",
+                ft = "markdown",
+                "<cmd>MarkdownPreviewStop<cr>",
+                desc = "Markdown Preview Kill (stop server)",
             },
         },
         config = function()
