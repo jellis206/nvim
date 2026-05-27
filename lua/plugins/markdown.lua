@@ -93,9 +93,13 @@ return {
                         local port_count = 8
                         local function port_free(p)
                             local sock = vim.uv.new_tcp()
-                            local ok = sock:bind("127.0.0.1", p)
+                            -- libuv's bind() doesn't surface EADDRINUSE; only listen() does
+                            -- (same path the node server crashes on). Probe with listen so we
+                            -- never hand a busy port to a sibling nvim session.
+                            local bound = sock:bind("127.0.0.1", p) ~= nil
+                            local free = bound and sock:listen(1, function() end) == 0
                             sock:close()
-                            return ok ~= nil
+                            return free
                         end
                         local chosen
                         for p = port_start, port_start + port_count - 1 do
