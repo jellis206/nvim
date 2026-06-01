@@ -13,6 +13,43 @@ local function runnable()
     return has_binary() or has_node_modules()
 end
 
+-- mkdp's client rewrites the URL from /page/<bufnr> to /<bufnr> on load
+-- (history.replaceState in pages/index.jsx). But the server only serves the app
+-- for /page/\d+ paths, so reloading the bare /<bufnr> URL hits the 404 handler.
+-- Re-prefix the rewrite with /page/ so the canonical URL stays reload-safe.
+-- The served artifact is the compiled bundle under out/; the .jsx only matters if
+-- rebuilt. lazy git-restores these on update, so this runs from the build hook and
+-- at load to self-heal. Idempotent: only writes when the un-patched literal is present.
+local function patch_reload_url()
+    local function replace_in_file(path, find, repl)
+        local f = io.open(path, "r")
+        if not f then
+            return
+        end
+        local content = f:read("*a")
+        f:close()
+        if not content:find(find, 1, true) then
+            return
+        end
+        local out = (content:gsub(vim.pesc(find), (repl:gsub("%%", "%%%%"))))
+        local w = io.open(path, "w")
+        if not w then
+            return
+        end
+        w:write(out)
+        w:close()
+    end
+
+    for _, bundle in ipairs(vim.fn.glob(app_dir .. "/out/_next/static/*/pages/index.js", false, true)) do
+        replace_in_file(bundle, 'replaceState(null,"","/".concat(e))', 'replaceState(null,"","/page/".concat(e))')
+    end
+    replace_in_file(
+        app_dir .. "/pages/index.jsx",
+        "window.history.replaceState(null, '', `/${bufnr}`)",
+        "window.history.replaceState(null, '', `/page/${bufnr}`)"
+    )
+end
+
 -- Sync install: used by lazy's `build` hook (lazy shows its own progress UI).
 local function install_sync()
     vim.fn.system({ "bash", app_dir .. "/install.sh" })
@@ -60,6 +97,7 @@ return {
         ft = "markdown",
         build = function()
             install_sync()
+            patch_reload_url()
         end,
         keys = {
             {
@@ -155,6 +193,7 @@ return {
             if not runnable() then
                 install_async()
             end
+            patch_reload_url()
             vim.cmd([[do FileType]])
         end,
     },
