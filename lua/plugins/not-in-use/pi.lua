@@ -1,0 +1,83 @@
+-- -- pi.nvim -- editor integration for `pi`, a minimal CLI AI agent.
+-- -- https://github.com/pablopunk/pi.nvim  (wrapper; the `pi` CLI is a separate tool)
+-- --
+-- -- Requires the `pi` binary on PATH (already installed here via asdf/nodejs).
+-- -- Provider / model / auth live in pi itself (`pi config`); this spec wires the
+-- -- commands, the demo keymaps, and a runtime model picker.
+--
+-- -- Pick a pi model from `pi --list-models` and apply it for subsequent requests.
+-- -- pi.nvim reads provider/model live on each run (config.get() is by-reference),
+-- -- so mutating the config here takes effect on the next :PiAsk -- no restart.
+-- local function pick_model()
+--     local bin = require("pi.config").get().binary or "pi"
+--     local cmd = type(bin) == "table" and vim.deepcopy(bin) or { bin }
+--     for i, part in ipairs(cmd) do
+--         cmd[i] = vim.fn.expand(part)
+--     end
+--     table.insert(cmd, "--list-models")
+--
+--     local res = vim.system(cmd, { text = true }):wait()
+--     if res.code ~= 0 then
+--         vim.notify("pi --list-models failed:\n" .. (res.stderr or ""), vim.log.levels.ERROR, { title = "pi" })
+--         return
+--     end
+--
+--     local entries = {}
+--     for line in vim.gsplit(res.stdout or "", "\n", { plain = true }) do
+--         -- Columns are: provider  model  context  max-out  thinking  images
+--         local provider, model = line:match("^(%S+)%s+(%S+)")
+--         if provider and model and provider ~= "provider" then
+--             table.insert(entries, {
+--                 provider = provider,
+--                 model = model,
+--                 label = string.format("%-14s %s", provider, model),
+--             })
+--         end
+--     end
+--
+--     if #entries == 0 then
+--         vim.notify("No pi models found", vim.log.levels.WARN, { title = "pi" })
+--         return
+--     end
+--
+--     vim.ui.select(entries, {
+--         prompt = "Select pi model",
+--         format_item = function(e)
+--             return e.label
+--         end,
+--     }, function(choice)
+--         if not choice then
+--             return
+--         end
+--         local cfg = require("pi.config").get()
+--         cfg.provider = choice.provider
+--         cfg.model = choice.model
+--         vim.notify("pi model -> " .. choice.provider .. " / " .. choice.model, vim.log.levels.INFO, { title = "pi" })
+--     end)
+-- end
+--
+-- return {
+--     {
+--         "pablopunk/pi.nvim",
+--         enabled = false,
+--         -- Lazy-load on first use of a command or keymap.
+--         cmd = { "PiAsk", "PiAskSelection", "PiCancel", "PiLog" },
+--         keys = {
+--             { "<leader>ai", "<cmd>PiAsk<cr>", mode = "n", desc = "Ask pi" },
+--             { "<leader>ai", "<cmd>PiAskSelection<cr>", mode = "v", desc = "Ask pi (selection)" },
+--             { "<leader>am", pick_model, mode = "n", desc = "Pick pi model" },
+--         },
+--         opts = {
+--             -- Resolve `pi` on PATH; override with an absolute path if a machine
+--             -- launches nvim without the shell PATH (e.g. some GUI launches).
+--             binary = "pi",
+--             -- provider/model intentionally omitted -> pi uses its own configured
+--             -- defaults until you pick one with <leader>am (or set them here).
+--         },
+--         config = function(_, opts)
+--             require("pi").setup(opts)
+--             -- Also expose the picker as a command for the command line.
+--             vim.api.nvim_create_user_command("PiModel", pick_model, { desc = "Pick pi model" })
+--         end,
+--     },
+-- }
