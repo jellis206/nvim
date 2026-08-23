@@ -41,6 +41,7 @@ require("lazy").setup({
         { import = "lazyvim.plugins.extras.lang.tex" },
         { import = "lazyvim.plugins.extras.linting.eslint" },
         { import = "lazyvim.plugins.extras.formatting.prettier" },
+        { import = "lazyvim.plugins.extras.lang.typescript.oxc" },
         { import = "lazyvim.plugins.extras.coding.neogen" },
         { import = "lazyvim.plugins.extras.coding.mini-surround" },
         { import = "lazyvim.plugins.extras.dap.core" },
