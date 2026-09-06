@@ -11,6 +11,9 @@ wk.add({
   { "<leader>bh", "<cmd>BufferLineCloseLeft<cr>", desc = "Close Left Buffers" },
   { "<leader>bl", "<cmd>BufferLineCloseRight<cr>", desc = "Close Right Buffers" },
 
+  -- AI
+  { "<leader>a", group = "AI" },
+
   -- Harpoon
   { "<leader>h", group = "+harpoon" },
 
