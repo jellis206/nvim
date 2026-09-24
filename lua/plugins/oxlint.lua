@@ -53,6 +53,80 @@ local function uses_biome(ctx)
   return found ~= nil and vim.fs.dirname(found) ~= vim.uv.os_homedir()
 end
 
+-- Some repos lint test files with a second oxlint config (bonaparte uses
+-- .oxlintrc.tests.json, which turns correctness off and enables a short
+-- allowlist). The language server only accepts one config per workspace, so it
+-- reports production-only rules on test files that CI never runs there. Drop
+-- those client-side so the editor agrees with CI.
+local TEST_CONFIG = ".oxlintrc.tests.json"
+local test_rules_cache = {}
+
+local function is_test_file(path)
+  return path:match("%.test%.[jt]sx?$") ~= nil or path:match("%.spec%.[jt]sx?$") ~= nil
+end
+
+--- Rules enabled by the nearest test config, or nil when the repo has none.
+local function allowed_test_rules(path)
+  local found = vim.fs.find(TEST_CONFIG, { path = vim.fs.dirname(path), upward = true, limit = 1 })[1]
+  if not found then
+    return nil
+  end
+  if test_rules_cache[found] then
+    return test_rules_cache[found]
+  end
+
+  local rules = {}
+  local ok, data = pcall(function()
+    return vim.json.decode(table.concat(vim.fn.readfile(found), "\n"))
+  end)
+  if ok and type(data) == "table" and type(data.rules) == "table" then
+    for name, setting in pairs(data.rules) do
+      local level = type(setting) == "table" and setting[1] or setting
+      if level ~= "off" then
+        rules[name] = true
+      end
+    end
+  end
+
+  test_rules_cache[found] = rules
+  return rules
+end
+
+-- oxlint reports `@tooling/custom(no-module-mocking)`; configs key it as
+-- `@tooling/custom/no-module-mocking`.
+local function rule_name(diagnostic)
+  if diagnostic.code == nil then
+    return nil
+  end
+  local code = tostring(diagnostic.code)
+  local plugin, rule = code:match("^(.+)%((.+)%)$")
+  return plugin and (plugin .. "/" .. rule) or code
+end
+
+local function filter_test_diagnostics(result)
+  if not (result and result.uri and result.diagnostics) then
+    return
+  end
+  local path = vim.uri_to_fname(result.uri)
+  if not is_test_file(path) then
+    return
+  end
+  local allowed = allowed_test_rules(path)
+  if not allowed then
+    return
+  end
+
+  local kept = {}
+  for _, diagnostic in ipairs(result.diagnostics) do
+    local name = rule_name(diagnostic)
+    -- Keep anything we cannot identify rather than hide it.
+    if name == nil or allowed[name] then
+      table.insert(kept, diagnostic)
+    end
+  end
+  result.diagnostics = kept
+end
+
 return {
   {
     "mason-org/mason.nvim",
@@ -68,6 +142,12 @@ return {
         oxlint = {
           settings = {
             run = "onType", -- lint as you type instead of only on save
+          },
+          handlers = {
+            ["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
+              filter_test_diagnostics(result)
+              return vim.lsp.handlers["textDocument/publishDiagnostics"](err, result, ctx, config)
+            end,
           },
           keys = {
             { "<leader>cO", "<cmd>LspOxlintFixAll<cr>", desc = "Fix all (oxlint)" },
