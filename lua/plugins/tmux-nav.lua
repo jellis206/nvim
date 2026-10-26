@@ -20,7 +20,7 @@ return {
   },
   {
     -- pairs with the herdr-navigator plugin bound in ~/.config/herdr/config.toml
-    "kaar/nvim-herdr-navigator",
+    "jellis206/nvim-herdr-navigator",
     cond = vim.env.HERDR_ENV == "1",
     lazy = false,
   },
