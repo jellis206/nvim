@@ -42,6 +42,18 @@ return {
                     --   })
                     -- end,
                 },
+                vtsls = {
+                    settings = {
+                        typescript = {
+                            tsserver = {
+                                -- Bonaparte's dashboard project alone peaks near 7.4 GB; the
+                                -- 3 GB default makes tsserver abort and restart in a loop,
+                                -- leaving only syntax-level go-to-definition.
+                                maxTsServerMemory = 12288,
+                            },
+                        },
+                    },
+                },
                 templ = {},
                 -- dartls = {},
             },
