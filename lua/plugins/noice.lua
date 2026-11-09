@@ -1,13 +1,24 @@
--- noice redraws LSP progress every 100 ms by default, and each redraw also
--- repaints the incsearch preview, so the first `/` match flashed while a
--- server reported progress (vtsls loading Bonaparte takes a while).
--- Four updates a second keeps the spinner without the strobe.
+-- Every screen update makes Neovim hide and re-show the terminal cursor, so
+-- noice's animated LSP spinner made the cursor (parked on the first `/` match)
+-- blink while vtsls loaded Bonaparte. Showing progress without the spinner
+-- means the screen only changes when the server reports new progress.
 return {
   {
     "folke/noice.nvim",
     opts = {
       lsp = {
-        progress = { throttle = 1000 / 4 },
+        progress = {
+          format = {
+            {
+              "{progress} ",
+              key = "progress.percentage",
+              contents = { { "{data.progress.message} " } },
+            },
+            "({data.progress.percentage}%) ",
+            { "{data.progress.title} ", hl_group = "NoiceLspProgressTitle" },
+            { "{data.progress.client} ", hl_group = "NoiceLspProgressClient" },
+          },
+        },
       },
     },
   },

@@ -10,6 +10,23 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
+    config = function(_, opts)
+      -- While a / or ? search previews, Neovim parks the cursor on the first
+      -- match, so `location` and `progress` change. Lualine's 1 s timer then
+      -- rewrites the statusline and forces :redrawstatus from cmdline mode,
+      -- which paints the window once without the incsearch highlight: the
+      -- first match flashes. Hold bar updates until the prompt closes; the
+      -- ModeChanged refresh catches up right after.
+      local nvim_opts = require("lualine.utils.nvim_opts")
+      local set = nvim_opts.set
+      nvim_opts.set = function(name, ...)
+        if name ~= "laststatus" and name ~= "showtabline" and vim.fn.getcmdtype():find("^[/?]$") then
+          return
+        end
+        return set(name, ...)
+      end
+      require("lualine").setup(opts)
+    end,
     opts = function()
       local lualine_require = require("lualine_require")
       lualine_require.require = require
